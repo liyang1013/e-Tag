@@ -1,5 +1,6 @@
 .ajax-loading {
     display: none;
+
     .loading {
         position: fixed;
         top: 50%;
@@ -14,14 +15,17 @@
         z-index: 9999;
         font-size: 16px;
         color: #fff;
+
         img {
             width: 32px;
             vertical-align: middle;
         }
+
         span {
             margin-left: 12px;
         }
     }
+
     .overlay {
         position: fixed;
         left: 0;

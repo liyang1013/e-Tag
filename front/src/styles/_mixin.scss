@@ -1,4 +1,4 @@
-$mainColor:#151519;
+$mainColor: #151519;
 
 @mixin table-center {
     display: table-cell;
@@ -21,12 +21,13 @@ $mainColor:#151519;
     align-items: center;
 }
 
-@mixin t-overflow($line:1) {
+@mixin t-overflow($line: 1) {
     @if $line==1 {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
     @else {
         display: -webkit-box;
         -webkit-line-clamp: $line;
@@ -35,5 +36,3 @@ $mainColor:#151519;
         text-overflow: ellipsis;
     }
 }
-
-

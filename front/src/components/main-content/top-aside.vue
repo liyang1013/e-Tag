@@ -1,31 +1,29 @@
 <template>
   <aside class="aside__top" ref="asideTop" style="white-space:nowrap;">
-        <span class="iconfont icon-nav toggleNavCollapse" :class="{ active: isSidebarNavCollapse }"
-              @click="toggleNavCollapse">
-        </span>
+    <span class="iconfont icon-nav toggleNavCollapse" :class="{ active: isSidebarNavCollapse }"
+      @click="toggleNavCollapse">
+    </span>
     <div style="display: inline-block;">
       <div class="tags" style="position: relative;  transition: .3s; display: inline; left: 0px">
         <el-tag key="home" @click="openMenu('home')" size="small" :effect="isCurrentMenu('home')">
           首页
         </el-tag>
-        <el-tag :key="tag.path" @click="openMenu(tag.path)" size="small" v-for="(tag,index) in activeMenuList" :closable="true"
-                :disable-transitions='true' :effect="isCurrentMenu(tag.path)"
-                @close="handleClose(tag)"
-                v-show="index < maxTagNum">
+        <el-tag :key="tag.path" @click="openMenu(tag.path)" size="small" v-for="(tag, index) in activeMenuList"
+          :closable="true" :disable-transitions='true' :effect="isCurrentMenu(tag.path)" @close="handleClose(tag)"
+          v-show="index < maxTagNum">
           {{ tag.name }}
         </el-tag>
         <el-tag v-if="activeMenuList.length > maxTagNum">
-          + {{activeMenuList.length - maxTagNum}}
+          + {{ activeMenuList.length - maxTagNum }}
         </el-tag>
       </div>
     </div>
   </aside>
 </template>
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
-  name: 'topAside',
   data() {
     return {
       tagCount: 1,
@@ -57,7 +55,7 @@ export default {
   },
   mounted() {
     let tagsWidth = this.$refs.asideTop.offsetWidth - 100;
-    this.maxTagNum = (tagsWidth/100).toFixed(0)
+    this.maxTagNum = (tagsWidth / 100).toFixed(0)
   }
 }
 </script>

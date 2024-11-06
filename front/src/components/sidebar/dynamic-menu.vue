@@ -15,7 +15,7 @@
         <span slot='title'>{{ v.name }}</span>
       </el-menu-item>
     </template>
-    
+
   </div>
 </template>
 
@@ -23,7 +23,6 @@
 import store from "@/store";
 
 export default {
-  name: 'my-nav',
   props: {
     menuList: {
       type: Array,
@@ -34,9 +33,9 @@ export default {
   },
   methods: {
     gotoRoute(item) {
-      this.$router.push( './' + item.path )
+      this.$router.push('./' + item.path)
       store.commit('SET_CURRENT_MENU', item.path)
-      store.commit('addMenu', {name: item.name,path: item.path})
+      store.commit('addMenu', { name: item.name, path: item.path })
     }
   }
 }

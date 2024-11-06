@@ -1,21 +1,17 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {
-      flushList: ['eoms','authorityReview','invoice']
-    }
+    return {}
   },
   mounted() {
-    for(let i = 0; i < this.flushList.length; i++){
-      if(window.location.pathname.indexOf('/' + this.flushList[i] + '/') !== -1){
-        this.$router.push('/' + this.flushList[i] + '/');
-        return
-      }
+    if (window.location.pathname.indexOf('/eTag/') !== -1) {
+      this.$router.push('/');
+      return
     }
   }
 }

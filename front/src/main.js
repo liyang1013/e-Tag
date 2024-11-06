@@ -11,8 +11,8 @@ import '@/styles/base.scss'
 
 Vue.prototype.$http = http
 Vue.config.productionTip = false
-ElementUI.TableColumn.props.showOverflowTooltip ={type:Boolean, default: true}
-Vue.use(ElementUI,{ size: 'mini'})
+ElementUI.TableColumn.props.showOverflowTooltip = { type: Boolean, default: true }
+Vue.use(ElementUI, { size: 'mini' })
 
 for (const key in globalFilter) {
   Vue.filter(key, globalFilter[key])

@@ -12,12 +12,6 @@ VueRouter.prototype.push = function push(location) {
 const routes = [
     {
         path: '/',
-        redirect: {
-            name: '403'
-        }
-    },
-    {
-        path: '/eTag',
         name: 'eTag',
         component: () => import('@/views/eTagIndex')
     },

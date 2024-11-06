@@ -14,7 +14,6 @@
 import types from './type'
 
 export default {
-  name: "exception",
   props: {
     type: {
       type: String,
@@ -24,11 +23,6 @@ export default {
   data() {
     return {
       config: types
-    }
-  },
-  methods: {
-    moes(){
-      this.$router.push('/eoms')
     }
   }
 }
@@ -40,18 +34,22 @@ export default {
   align-items: center;
   text-align: center;
   padding-top: 100px;
+
   .img {
     display: inline-block;
     padding-right: 52px;
     zoom: 1;
+
     img {
       height: 360px;
       max-width: 430px;
     }
   }
+
   .content {
     display: inline-block;
     flex: auto;
+
     h1 {
       color: #434e59;
       font-size: 72px;
@@ -59,6 +57,7 @@ export default {
       line-height: 72px;
       margin-bottom: 24px;
     }
+
     .desc {
       color: rgba(0, 0, 0, .45);
       font-size: 20px;

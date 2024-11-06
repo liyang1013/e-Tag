@@ -4,7 +4,6 @@
 
 <script>
 export default {
-  name: 'home',
   data() {
     return {
       nowDate: new Date()
