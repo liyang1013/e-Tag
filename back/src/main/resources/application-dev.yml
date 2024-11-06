@@ -1,0 +1,77 @@
+#Tomcat
+server:
+  port: 8080
+# DataSource
+spring:
+  datasource:
+    dynamic:
+      primary: tiptop
+      strict: false
+      datasource:
+        tiptop:
+          driver-class-name: oracle.jdbc.OracleDriver
+          url: jdbc:oracle:thin:@172.17.199.56:1521/topprod
+          username: ds
+          password: ds
+        oa:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://172.16.199.34:1433;DatabaseName=ecology9
+          username: sa
+          password: oaadmin+123
+        fluxWms:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://172.17.200.156:1433;DatabaseName=WMS_PROD
+          username: WMS_PROD
+          password: WMS_PROD#@￥
+        fluxWcs:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.17.200.153:3306/wcsdb?characterEncoding=UTF-8&serverTimezone=UTC
+          username: root
+          password: fluxwcs123
+        fluxRcs:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.17.200.154:3306/mr_rcs2?characterEncoding=UTF-8&serverTimezone=UTC
+          username: root
+          password: mr123
+        myself:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.17.200.108:3306/eoms?characterEncoding=UTF-8&serverTimezone=UTC
+          username: root
+          password: root
+        jira:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://172.16.200.27:1433;DatabaseName=jiradb
+          username: jiratest
+          password: jiratest+123
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 200MB
+
+mybatis:
+  type-aliases-package: com.keboda.eomsback.*.pojo
+  mapper-locations: classpath:mapping/*/*Mapper.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+
+page helper:
+  auto-dialect: true
+  reasonable: true
+  support-methods-arguments: true
+  auto-runtime-dialect: true
+
+
+logging:
+  level:
+    com.keboda.eomsback.* : DEBUG
+
+#自定义定时器动态执行
+timer:
+  getRobotsStatus:
+    corn: 0 59 23 * * ?
+  getPlcInfo:
+    corn: 0 59 23 * * ?
+  invalidDocumentDelete:
+    corn: 0 0 6 1 * ?
+  checkRcsStatus:
+    corn: 0 59 23 * * ?
