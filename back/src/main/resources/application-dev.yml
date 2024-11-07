@@ -5,14 +5,14 @@ server:
 spring:
   datasource:
     dynamic:
-      primary: fluxWcs
+      primary: eTag
       strict: false
       datasource:
-        fluxWcs:
+        eTag:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://172.17.200.153:3306/wcsdb?characterEncoding=UTF-8&serverTimezone=UTC
+          url: jdbc:mysql://localhost:3306/etag?characterEncoding=UTF-8&serverTimezone=UTC
           username: root
-          password: fluxwcs123
+          password: root
   servlet:
     multipart:
       max-file-size: 10MB
