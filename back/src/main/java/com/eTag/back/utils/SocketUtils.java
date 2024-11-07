@@ -1,4 +1,4 @@
-package com.keboda.eomsback.utils;
+package com.eTag.back.utils;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
