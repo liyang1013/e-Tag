@@ -12,7 +12,7 @@ export const menu = [
         component: () => import('@/views/templateView')
     },
     {
-        name: '设备管理',
+        name: '设备列表',
         path: 'deviceInfo',
         icon: 'el-icon-s-platform',
         component: () => import('@/views/deviceInfoView')
