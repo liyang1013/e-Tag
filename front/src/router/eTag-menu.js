@@ -6,16 +6,22 @@ export const menu = [
         component: () => import('@/views/HomeView')
     },
     {
-        name: '模板管理',
+        name: '设置标签',
+        path: 'setLabel',
+        icon: 'el-icon-upload',
+        component: () => import('@/views/SetLabelView')
+    },
+    {
+        name: '标准模板',
         path: 'template',
         icon: 'el-icon-picture',
-        component: () => import('@/views/templateView')
+        component: () => import('@/views/TemplateView')
     },
     {
         name: '设备列表',
         path: 'deviceInfo',
         icon: 'el-icon-s-platform',
-        component: () => import('@/views/deviceInfoView')
+        component: () => import('@/views/DeviceInfoView')
     }
 ]
 

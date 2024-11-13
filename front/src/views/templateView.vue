@@ -1,5 +1,5 @@
 <template>
-    <div>模板管理</div>
+    <div>模板页面</div>
 </template>
 
 <script>

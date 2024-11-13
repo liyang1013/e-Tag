@@ -10,4 +10,6 @@ public interface DeviceInfoMapper {
     int insertSelective(DeviceInfo record);
 
     List<DeviceInfo> searchDeviceInfo();
+
+    void deleteDevice(DeviceInfo deviceInfo);
 }

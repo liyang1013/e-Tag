@@ -58,6 +58,10 @@
       </if>
     </trim>
   </insert>
+  <delete id="deleteDevice">
+    delete from deviceinfo
+    where clientid = #{clientid}
+  </delete>
   <select id="searchDeviceInfo" resultType="com.eTag.back.api.pojo.DeviceInfo">
     select * from deviceinfo
   </select>

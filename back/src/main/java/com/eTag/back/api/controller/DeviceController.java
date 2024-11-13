@@ -24,4 +24,10 @@ public class DeviceController {
         return BaseResult.success();
     }
 
+    @PostMapping("/deleteDevice")
+    public BaseResult deleteDevice(@RequestBody DeviceInfo deviceInfo){
+        iDeviceInfoService.deleteDevice(deviceInfo);
+        return BaseResult.success();
+    }
+
 }

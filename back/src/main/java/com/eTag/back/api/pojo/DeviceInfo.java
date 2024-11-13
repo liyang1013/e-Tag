@@ -1,12 +1,19 @@
 package com.eTag.back.api.pojo;
 
 import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * deviceinfo
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeviceInfo implements Serializable {
     private String name;
 

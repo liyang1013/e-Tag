@@ -13,7 +13,7 @@ const routes = [
     {
         path: '/',
         name: 'eTag',
-        component: () => import('@/views/eTagIndex')
+        component: () => import('@/views/ETagIndex')
     },
     {
         path: '*',

@@ -8,4 +8,6 @@ public interface IDeviceInfoService {
     List<DeviceInfo> searchDeviceInfo();
 
     void addDevice(DeviceInfo deviceInfo);
+
+    void deleteDevice(DeviceInfo deviceInfo);
 }
