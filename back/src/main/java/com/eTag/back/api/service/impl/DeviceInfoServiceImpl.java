@@ -29,6 +29,7 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
         DeviceInfo device = DeviceInfo.builder().ip("10.0.0.245").name("@23090B1E35").clientid("ACF42C9D3116")
                 .model("PDIO10IT").version("V3.24").freespace(27762688).storage(33554432).remarks(deviceInfo.getRemarks()).build();
         deviceInfoMapper.insertSelective(device);
+        //todo 检查客户端ID是否存在，存在报错
 //        if (!SocketUtils.isReachable(deviceInfo.getIp(), 80))
 //            throw new RuntimeException("网络错误，请检查IP地址是否正确填写");
 //
