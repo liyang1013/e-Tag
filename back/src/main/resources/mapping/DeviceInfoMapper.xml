@@ -65,4 +65,7 @@
   <select id="searchDeviceInfo" resultType="com.eTag.back.api.pojo.DeviceInfo">
     select * from deviceinfo
   </select>
+    <select id="selectDeviceInfoByKey" resultType="com.eTag.back.api.pojo.DeviceInfo">
+      select * from deviceinfo where clientid = #{clientid}
+    </select>
 </mapper>

@@ -1,6 +1,6 @@
 <template>
     <div> <span style="font-size: 18px;">设备管理</span> <el-button style="float: right;" type="danger" round
-            @click="dialogFormVisible = true">添加设备</el-button>
+            @click="() => { dialogFormVisible = true; clearForm() }">添加设备</el-button>
 
         <el-divider></el-divider>
 
@@ -10,8 +10,8 @@
                 HTTP-SERVER, 连接同一局域网内WIFI获取IP地址。</p>
         </el-alert>
 
-        <el-table :data="documentList" border  v-loading="tableLoading"
-            element-loading-spinner="el-icon-loading" size="medium">
+        <el-table :data="documentList" border v-loading="tableLoading" element-loading-spinner="el-icon-loading"
+            size="medium">
             <el-table-column prop="clientid" label="客户端ID">
             </el-table-column>
             <el-table-column prop="name" label="蓝牙名称">
@@ -19,11 +19,13 @@
             <el-table-column prop="ip" label="地址">
             </el-table-column>
             <el-table-column prop="freespace" label="剩余空间">
+                <template slot-scope="scope">
+                    {{(scope.row.freespace/1048576).toFixed(2)}}MB</template>
             </el-table-column>
             <el-table-column prop="remarks" label="备注">
             </el-table-column>
-            <el-table-column fixed="right" label="操作">
-                <template  slot-scope="scope">
+            <el-table-column  label="操作">
+                <template slot-scope="scope">
                     <el-button type="text" @click="confirmDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -39,7 +41,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer" style="text-align: center;">
-                <el-button @click="() => { dialogFormVisible = false; clearForm() }">取 消</el-button>
+                <el-button @click="dialogFormVisible = false;">取 消</el-button>
                 <el-button type="primary" @click="addDevice">确 定</el-button>
             </div>
         </el-dialog>
@@ -76,8 +78,8 @@ export default {
             });
         },
         deleteDevice(row) {
-            this.$http.post('/api/device/deleteDevice',row).then(res => {
-                if(res.data.message === '成功'){
+            this.$http.post('/api/device/deleteDevice', row).then(res => {
+                if (res.data.message === '成功') {
                     this.$message({ type: 'success', message: '删除成功!' });
                     this.search()
                 }
@@ -93,7 +95,6 @@ export default {
                     this.$message({ type: 'success', message: '添加成功' });
                     this.search()
                     this.dialogFormVisible = false
-                    this.clearForm()
                 }
             })
         },

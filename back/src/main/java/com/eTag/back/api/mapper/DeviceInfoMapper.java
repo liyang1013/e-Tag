@@ -12,4 +12,6 @@ public interface DeviceInfoMapper {
     List<DeviceInfo> searchDeviceInfo();
 
     void deleteDevice(DeviceInfo deviceInfo);
+
+    DeviceInfo selectDeviceInfoByKey(String clientid);
 }

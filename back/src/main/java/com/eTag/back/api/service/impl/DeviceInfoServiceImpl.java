@@ -3,6 +3,7 @@ package com.eTag.back.api.service.impl;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONUtil;
 import com.eTag.back.api.mapper.DeviceInfoMapper;
 import com.eTag.back.api.pojo.DeviceInfo;
 import com.eTag.back.api.service.IDeviceInfoService;
@@ -26,23 +27,30 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
 
     @Override
     public void addDevice(DeviceInfo deviceInfo) {
-        DeviceInfo device = DeviceInfo.builder().ip("10.0.0.245").name("@23090B1E35").clientid("ACF42C9D3116")
-                .model("PDIO10IT").version("V3.24").freespace(27762688).storage(33554432).remarks(deviceInfo.getRemarks()).build();
-        deviceInfoMapper.insertSelective(device);
-        //todo 检查客户端ID是否存在，存在报错
-//        if (!SocketUtils.isReachable(deviceInfo.getIp(), 80))
-//            throw new RuntimeException("网络错误，请检查IP地址是否正确填写");
-//
-//        try {
-//            HttpResponse res = HttpRequest.post("http://" + deviceInfo.getIp() + "/Iotags")
-//                    .header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded; charset=UTF-8")
-//                    .header(Header.ACCEPT, "*/*")
-//                    .timeout(20000)
-//                    .execute();
-//            System.out.println(res);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e.getMessage());
-//        }
+
+        if (!SocketUtils.isReachable(deviceInfo.getIp(), 80))
+            throw new RuntimeException("网络错误，请检查IP地址是否正确填写");
+
+        try {
+            HttpResponse res = HttpRequest.post("http://" + deviceInfo.getIp() + "/Iotags")
+                    .header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded; charset=UTF-8")
+                    .header(Header.ACCEPT, "*/*")
+                    .timeout(20000)
+                    .execute();
+            String json = res.body().replace("free-space", "freespace");
+            DeviceInfo device  = JSONUtil.toBean(json,DeviceInfo.class);
+            device.setRemarks(deviceInfo.getRemarks());
+            device.setIp(deviceInfo.getIp());
+
+            //检查客户端ID是否存在，存在报错
+            DeviceInfo isExist = deviceInfoMapper.selectDeviceInfoByKey(device.getClientid());
+            if(isExist != null) throw new RuntimeException("标签:"+device.getClientid()+"已存在,不能重复添加");
+
+            deviceInfoMapper.insertSelective(device);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
