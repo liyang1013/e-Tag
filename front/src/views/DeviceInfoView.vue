@@ -11,7 +11,8 @@
         </el-alert>
 
         <el-table :data="documentList" border v-loading="tableLoading" element-loading-spinner="el-icon-loading"
-            size="medium">
+            size="medium"
+            style=" overflow-y: auto; overflow-x: hidden; height: calc(100vh - 240px); max-height: calc(100vh -240px);">
             <el-table-column prop="clientid" label="客户端ID">
             </el-table-column>
             <el-table-column prop="name" label="蓝牙名称">
@@ -20,11 +21,11 @@
             </el-table-column>
             <el-table-column prop="freespace" label="剩余空间">
                 <template slot-scope="scope">
-                    {{(scope.row.freespace/1048576).toFixed(2)}}MB</template>
+                    {{ (scope.row.freespace / 1048576).toFixed(2) }}MB</template>
             </el-table-column>
             <el-table-column prop="remarks" label="备注">
             </el-table-column>
-            <el-table-column  label="操作">
+            <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" @click="confirmDelete(scope.row)">删除</el-button>
                 </template>

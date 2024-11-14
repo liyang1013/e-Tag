@@ -1,22 +1,33 @@
 <template>
-  <el-card class="custom-card" style="width: 200px; height: 316px; "  >
-    <div class="video-container" :style="videoStyle">
-      <video muted="" src="http://tag.pavodisplay.com/storage/video/2001.mp4" controls="controls"  loop="true" width="400px" id="video">
-                    您的浏览器不支持 video 标签。
-                </video>
-    </div>
-    <div class="image-container" :style="imageStyle">
-      <img :src="imageSrc" alt="Image">
-    </div>
-    <div class="text-container">
-      <span>{{ text }}</span> <el-button style="float: right;" type="text" icon="el-icon-edit" circle></el-button>
-    </div>
-  </el-card>
+    <el-card class="custom-card" style="width: 200px; height: 316px; ">
+      <div class="video-container" :style="videoStyle">
+        <video muted="" src="http://tag.pavodisplay.com/storage/video/2001.mp4" controls="controls" loop="true"
+          width="400px" id="video">
+          您的浏览器不支持 video 标签。
+        </video>
+      </div>
+      <div class="image-container" :style="imageStyle">
+        <img :src="imageSrc" alt="Image">
+      </div>
+      <div class="text-container">
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ text }}</span> <el-button
+           type="text" icon="el-icon-edit" circle @click="openDrawer"></el-button>
+      </div>
+    </el-card>
 </template>
 
 <script>
 export default {
   name: 'CustomCard',
+  data() {
+    return {
+    }
+  },
+  methods: {
+    openDrawer(){
+      this.$emit('open-drawer');
+    }
+  },
   props: {
     videoSrc: {
       type: String,
@@ -69,8 +80,9 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #312a2a; 
-  border-radius: 4px; 
+  border: 2px solid #cfcfcf;
+  border-radius: 8px;
+  background-color: #ededed;
 }
 
 .video-container,
@@ -94,6 +106,9 @@ export default {
 
 
 .text-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex: none;
   padding: 8px;
   box-sizing: border-box;
@@ -102,5 +117,4 @@ export default {
   white-space: nowrap;
   text-align: center;
 }
-
 </style>
