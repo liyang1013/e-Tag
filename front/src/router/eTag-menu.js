@@ -5,18 +5,12 @@ export const menu = [
         icon: 'el-icon-s-home',
         component: () => import('@/views/HomeView')
     },
-    {
-        name: '设置标签',
-        path: 'setLabel',
-        icon: 'el-icon-upload',
-        component: () => import('@/views/SetLabelView')
-    },
-    {
-        name: '标准模板',
-        path: 'template',
-        icon: 'el-icon-picture',
-        component: () => import('@/views/TemplateView')
-    },
+    // {
+    //     name: '标准模板',
+    //     path: 'template',
+    //     icon: 'el-icon-picture',
+    //     component: () => import('@/views/TemplateView')
+    // },
     {
         name: '设备列表',
         path: 'deviceInfo',

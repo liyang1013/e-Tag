@@ -7,8 +7,8 @@
 
         <div
             style="  overflow-y: auto; overflow-x: hidden; height: calc(100vh - 200px); max-height: calc(100vh -200px);">
-            <ProductCard @open-drawer="handleOpenDrawer(item)" style="float: left; margin: 10px; position: relative;"
-                v-for="item in 20" :key="item" text="丹东草莓丹东草莓丹东草莓"
+            <ProductCard :ishosw="true" @open-drawer="handleOpenDrawer(item)" style="float: left; margin: 10px; position: relative;"
+                v-for="item in 5" :key="item" text="丹东草莓丹东草莓丹东草莓"
                 imageSrc="http://tag.pavodisplay.com/storage/tag/1001.jpg"
                 videoSrc="http://tag.pavodisplay.com/storage/video/2001.mp4">
             </ProductCard>
