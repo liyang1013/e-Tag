@@ -1,11 +1,11 @@
 <template>
-    <div> <span style="font-size: 18px;">设备管理</span> <el-button style="float: right;" type="danger" round
-            @click="() => { dialogFormVisible = true; clearForm() }">添加设备</el-button>
+    <div> <span style="font-size: 18px;">设备管理</span> <el-button style="float: right;" type="danger"
+            round>添加设备</el-button>
         <el-divider></el-divider>
         <el-alert type="warning" :closable="false">
             <p style="font-size: 14px;display: flex;">需要先通过 <el-link style="font-size: 14px;"
                     href="/file/PriceTagSetup-0.24.apk" type="primary" target="_blank">电子价签设置工具</el-link>把电子标签工作模式设置为
-                HTTP-SERVER, 连接同一局域网内WIFI获取IP地址。</p>
+                HTTP.</p>
         </el-alert>
         <el-table :data="documentList" border v-loading="tableLoading" element-loading-spinner="el-icon-loading"
             size="medium"
@@ -29,88 +29,76 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog title="标签信息" :visible.sync="dialogFormVisible" width="400px" :show-close="false">
-            <el-form :model="form" label-width="60px" label-position="left">
-                <el-form-item label="IP地址:">
-                    <el-input v-model="form.ip" style="width: 250px"></el-input>
-                </el-form-item>
-                <el-form-item label="备注:">
-                    <el-input v-model="form.remarks" style="width: 250px"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer" style="text-align: center;">
-                <el-button @click="dialogFormVisible = false;">取 消</el-button>
-                <el-button type="primary" @click="addDevice">确 定</el-button>
-            </div>
-        </el-dialog>
+
         <el-drawer :visible.sync="drawer" :with-header="false" :size="960">
             <el-row justify="center">
                 <el-col :span="11" class="col-center">
-                    <el-form style="margin-top: 100px;" label-suffix=":" label-position="left" label-width="100px"
+                    <el-form style="margin-top: 50px;" label-suffix=":" label-position="left" label-width="100px"
                         :model="formLabelAlign">
-                        <el-form-item label="名称">
-                            <el-input v-model="formLabelAlign.text"></el-input>
-                        </el-form-item>
                         <el-form-item label="视频上传">
-                            <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false" :show-file-list="false"
-                                accept="video/*" :on-success="upload_success" :on-error="upload_err">
+                            <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false"
+                                :show-file-list="false" accept="video/*" :on-success="upload_success"
+                                :on-error="upload_err">
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
                         <el-form-item label="视频文件">
-                            <el-input v-model="formLabelAlign.videoUrl" :disabled="true"></el-input>
+                            <el-input v-model="forms.video.url" :disabled="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="X">
+                            <el-input-number v-model="forms.video.x" controls-position="right" :min="0"
+                                :max="400"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="Y">
+                            <el-input-number v-model="forms.video.y" controls-position="right" :min="0"
+                                :max="640"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="视频宽度">
+                            <el-input-number v-model="forms.video.width" controls-position="right" :min="0"
+                                :max="400"></el-input-number>
                         </el-form-item>
                         <el-form-item label="视频高度">
-                            <el-input-number v-model="formLabelAlign.videoHeight"
-                                @change="(val) => changeVideHeight(val)" controls-position="right" :min="0"
-                                :max="480"></el-input-number>
+                            <el-input-number v-model="forms.video.height" controls-position="right" :min="0"
+                                :max="640"></el-input-number>
                         </el-form-item>
                         <el-form-item label="图片上传">
-                            <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false" :show-file-list="false"
-                                accept="image/*" :on-success="upload_success" :on-error="upload_err">
+                            <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false"
+                                :show-file-list="false" accept="image/*" :on-success="upload_success"
+                                :on-error="upload_err">
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
                         <el-form-item label="图片文件">
-                            <el-input v-model="formLabelAlign.imageUrl" :disabled="true"></el-input>
+                            <el-input v-model="forms.image.url" :disabled="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="X">
+                            <el-input-number v-model="forms.image.x" controls-position="right" :min="0"
+                                :max="400"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="Y">
+                            <el-input-number v-model="forms.image.y" controls-position="right" :min="0"
+                                :max="640"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="图片宽度">
+                            <el-input-number v-model="forms.image.width" controls-position="right" :min="0"
+                                :max="400"></el-input-number>
                         </el-form-item>
                         <el-form-item label="图片高度">
-                            <el-input-number v-model="formLabelAlign.imageHeight"
-                                @change="(val) => changeImageHeight(val)" controls-position="right" :min="0"
-                                :max="480"></el-input-number>
+                            <el-input-number v-model="forms.image.height" controls-position="right" :min="0"
+                                :max="640"></el-input-number>
                         </el-form-item>
-
                         <el-form-item style="margin:30px -50px">
                             <el-button type="danger">同步</el-button>
                             <el-button type="info">取消</el-button>
                         </el-form-item>
                     </el-form>
-
                 </el-col>
                 <el-col :span="11">
-                    <el-container>
-                        <el-header style="height: 40px;margin-top: 50px;">
-                            <div class="text-container">
-                                <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{
-                                    formLabelAlign.text
-                                }}</p>
-                                <br>
-                            </div>
-                        </el-header>
-                        <el-main class="col-center">
-                            <el-card class="custom-card" style="height: 495px; width: 300px;">
-                                <div class="video-container" :style="videoStyle">
-                                    <video muted="" autoplay="atuo" :src="formLabelAlign.videoUrl" controls="controls"
-                                        loop="true" id="video">
-                                        您的浏览器不支持 video 标签。
-                                    </video>
-                                </div>
-                                <div class="image-container" :style="imageStyle">
-                                    <img :src="formLabelAlign.imageUrl" />
-                                </div>
-                            </el-card>
-                        </el-main>
-                    </el-container>
+                    <el-card class="media-container">
+                        <video v-if="forms.video.url" :src="forms.video.url" :style="videoStyle" autoplay loop
+                            style="object-fit: cover"></video>
+                        <img v-if="forms.image.url" :src="forms.image.url" :style="imageStyle" />
+                    </el-card>
                 </el-col>
             </el-row>
         </el-drawer>
@@ -123,31 +111,43 @@ export default {
     data() {
         return {
             documentList: [],
-            form: {
-                ip: null,
-                remarks: null
+            forms: {
+                image: {
+                    url: 'http://tag.pavodisplay.com/storage/tag/1001.jpg',
+                    x: 0,
+                    y: 320,
+                    width: 400,
+                    height: 320,
+                },
+                video: {
+                    url: 'http://tag.pavodisplay.com/storage/video/2001.mp4',
+                    x: 0,
+                    y: 0,
+                    width: 400,
+                    height: 320,
+                },
             },
             tableLoading: false,
-            dialogFormVisible: false,
-            drawer: false,
-            formLabelAlign: {
-                text: "丹东草莓",
-                videoUrl: "http://tag.pavodisplay.com/storage/video/2001.mp4",
-                videoHeight: 240,
-                imageUrl: "http://tag.pavodisplay.com/storage/tag/1001.jpg",
-                imageHeight: 240
-            }
+            drawer: false
         }
     },
     computed: {
         videoStyle() {
             return {
-                height: `${this.formLabelAlign.videoHeight}px`,
+                position: 'absolute',
+                left: `${this.forms.video.x}px`,
+                top: `${this.forms.video.y}px`,
+                width: `${this.forms.video.width}px`,
+                height: `${this.forms.video.height}px`
             };
         },
         imageStyle() {
             return {
-                height: `${this.formLabelAlign.imageHeight}px`,
+                position: 'absolute',
+                left: `${this.forms.image.x}px`,
+                top: `${this.forms.image.y}px`,
+                width: `${this.forms.image.width}px`,
+                height: `${this.forms.image.height}px`
             };
         },
     },
@@ -179,28 +179,6 @@ export default {
                     this.search()
                 }
             })
-        },
-        addDevice() {
-            if (!this.form.ip) {
-                this.$message({ type: 'warning', message: 'IP地址不能为空' });
-                return
-            }
-            this.$http.post('/api/device/addDevice', this.form).then(res => {
-                if (res.data.message === '成功') {
-                    this.$message({ type: 'success', message: '添加成功' });
-                    this.search()
-                    this.dialogFormVisible = false
-                }
-            })
-        },
-        changeVideHeight(val) {
-            this.formLabelAlign.imageHeight = 480 - val
-        },
-        changeImageHeight(val) {
-            this.formLabelAlign.videoHeight = 480 - val
-        },
-        clearForm() {
-            this.form = {}
         }
     },
     mounted() {
@@ -214,19 +192,18 @@ export default {
     margin: 20PX 0;
 }
 
-.custom-card {
-    display: flex;
+/deep/ .media-container {
+    margin-top: 50px;
     flex-direction: column;
     overflow: hidden;
     border: 2px solid #cfcfcf;
     border-radius: 8px;
-    background-color: #ededed;
+    position: relative;
+    width: 400px;
+    height: 640px;
+
 }
 
-/deep/ .el-card__body,
-.el-main {
-    padding: 5px;
-}
 
 .col-center {
     display: flex;
@@ -252,18 +229,5 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.text-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-    padding: 8px;
-    box-sizing: border-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: center;
 }
 </style>
