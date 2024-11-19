@@ -13,9 +13,9 @@ export const menu = [
     // },
     {
         name: '设备列表',
-        path: 'deviceInfo',
+        path: 'device',
         icon: 'el-icon-s-platform',
-        component: () => import('@/views/DeviceInfoView')
+        component: () => import('@/views/DeviceView')
     }
 ]
 
