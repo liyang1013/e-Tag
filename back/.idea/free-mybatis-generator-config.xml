@@ -27,6 +27,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="devices">
+          <value>
+            <Config>
+              <option name="annotationDAO" value="true" />
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="DevicesMapper" />
+              <option name="daoPackage" value="com.eTag.back.api.mapper" />
+              <option name="daoPostfix" value="Mapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="Devices" />
+              <option name="modelPackage" value="com.eTag.back.api.pojo" />
+              <option name="name" value="devices" />
+              <option name="overrideJava" value="true" />
+              <option name="primaryKey" value="" />
+              <option name="projectFolder" value="$PROJECT_DIR$" />
+              <option name="tableName" value="devices" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapping" />
+            </Config>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
