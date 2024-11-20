@@ -33,4 +33,16 @@ public class DeviceController {
     public BaseResult uploadFile(MultipartFile file) throws IOException {
        return BaseResult.success(iDevicesService.uploadFile(file));
     }
+
+    @PostMapping("/addLabel")
+    public BaseResult addLabel(@RequestBody Devices devices)  {
+        iDevicesService.addLabel(devices);
+        return BaseResult.success();
+    }
+
+    @PostMapping("/deleteDevice")
+    public BaseResult deleteDevice(@RequestBody Devices devices){
+        iDevicesService.deleteDevice(devices);
+        return BaseResult.success();
+    }
 }

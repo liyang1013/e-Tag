@@ -57,6 +57,39 @@
             </if>
         </trim>
     </insert>
+    <update id="updateSelective">
+        update devices
+        <set>
+            <if test="clientId != null">
+                client_id = #{clientId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="lastTime != null">
+                last_time = #{lastTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=BOOLEAN},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where client_id = #{clientId,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteByClientId">
+        delete from devices where client_id = #{clientId}
+    </delete>
     <select id="searchDevicePageHelper" resultType="com.eTag.back.api.pojo.Devices">
         select *
         from devices
@@ -65,11 +98,15 @@
                 and status = #{status}
             </if>
             <if test="code != null and code != '' ">
-                and clientId like '%${code}%'
+                and client_id like '%${code}%'
             </if>
             <if test="name != null and name != '' ">
                 and name like '%${name}%'
             </if>
         </where>
+    </select>
+    <select id="selectByClientId" resultType="com.eTag.back.api.pojo.Devices">
+        select *
+        from devices where client_id = #{clientId}
     </select>
 </mapper>

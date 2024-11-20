@@ -57,4 +57,8 @@ public class Devices implements Serializable {
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
+
+    private Template image;
+
+    private Template video;
 }

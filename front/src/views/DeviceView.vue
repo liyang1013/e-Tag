@@ -2,17 +2,14 @@
     <div>
         <el-form ref="form" :model="searchVo" :inline="true" label-suffix=":" class="demo-form-inline">
             <el-form-item style="float:right;">
-                <el-button type="primary" @click="search()" round>查询</el-button>
-                <el-button type="danger" round style="margin-left: 10px;" @click="drawer = true">添加标签</el-button>
+                <el-button type="primary" @click="search()" round :loading="tableLoading">查询</el-button>
+                <el-button type="danger" round style="margin-left: 10px;" @click="drawer = true;abledClientid = false">添加标签</el-button>
             </el-form-item>
             <el-form-item label="客户端ID">
                 <el-input v-model="searchVo.code" style="width: 160px;" clearable placeholder="客户端ID"></el-input>
             </el-form-item>
             <el-form-item label="标签名">
                 <el-input v-model="searchVo.name" style="width: 160px;" clearable placeholder="标签名"></el-input>
-            </el-form-item>
-            <el-form-item label="模板名">
-                <el-input v-model="searchVo.clientid" style="width: 160px;" clearable placeholder="模板名"></el-input>
             </el-form-item>
             <el-form-item label="状态">
                 <el-select v-model="searchVo.status" placeholder="请选择" style="width: 90px;">
@@ -48,7 +45,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" @click="confirmDelete(scope.row)">删除</el-button>
-                    <el-button type="text" @click="drawer = true">编辑</el-button>
+                    <el-button type="text" @click="drawer = true;abledClientid = true">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -62,13 +59,13 @@
         <el-drawer :visible.sync="drawer" :with-header="false" :size="960">
             <el-row justify="center">
                 <el-col :span="11" class="col-center">
-                    <el-form style="margin-top: 20px;" label-suffix=":" label-position="left" label-width="100px"
-                        :model="forms">
-                        <el-form-item label="客户端ID">
-                            <el-input v-model="forms.clientid" placeholder="蓝牙工具获取"></el-input>
+                    <el-form :rules="rules" style="margin-top: 20px;" label-suffix=":" label-position="left"
+                        label-width="100px" :model="forms" ref="forms">
+                        <el-form-item label="客户端ID" prop="clientId">
+                            <el-input v-model="forms.clientId" placeholder="蓝牙工具获取" :disabled="abledClientid"></el-input>
                         </el-form-item>
-                        <el-form-item label="标签名">
-                            <el-input v-model="forms.name" placeholder="自定义标签名称"></el-input>
+                        <el-form-item label="标签名" prop="name">
+                            <el-input v-model="forms.name" placeholder="自定义标签名称" prop="name"></el-input>
                         </el-form-item>
 
                         <el-form-item label="视频上传">
@@ -78,22 +75,22 @@
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
-                        <el-form-item label="视频文件">
+                        <el-form-item label="视频文件" prop="video.url">
                             <el-input v-model="forms.video.url" :disabled="true"></el-input>
                         </el-form-item>
-                        <el-form-item label="左边距(X)">
+                        <el-form-item label="左边距(X)" prop="video.x">
                             <el-input-number v-model="forms.video.x" controls-position="right" :min="0"
                                 :max="400"></el-input-number>
                         </el-form-item>
-                        <el-form-item label="上边距(Y)">
+                        <el-form-item label="上边距(Y)" prop="video.y">
                             <el-input-number v-model="forms.video.y" controls-position="right" :min="0"
                                 :max="640"></el-input-number>
                         </el-form-item>
-                        <el-form-item label="视频宽度">
+                        <el-form-item label="视频宽度" prop="video.width">
                             <el-input-number v-model="forms.video.width" controls-position="right" :min="0"
                                 :max="400"></el-input-number>
                         </el-form-item>
-                        <el-form-item label="视频高度">
+                        <el-form-item label="视频高度" prop="video.height">
                             <el-input-number v-model="forms.video.height" controls-position="right" :min="0"
                                 :max="640"></el-input-number>
                         </el-form-item>
@@ -104,35 +101,36 @@
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
-                        <el-form-item label="图片文件">
+                        <el-form-item label="图片文件" prop="image.url">
                             <el-input v-model="forms.image.url" :disabled="true"></el-input>
                         </el-form-item>
-                        <el-form-item label="左边距(X)">
+                        <el-form-item label="左边距(X)" prop="image.x">
                             <el-input-number v-model="forms.image.x" controls-position="right" :min="0"
                                 :max="400"></el-input-number>
                         </el-form-item>
-                        <el-form-item label="上边距(Y)">
+                        <el-form-item label="上边距(Y)" prop="image.y">
                             <el-input-number v-model="forms.image.y" controls-position="right" :min="0"
                                 :max="640"></el-input-number>
                         </el-form-item>
-                        <el-form-item label="图片宽度">
+                        <el-form-item label="图片宽度" prop="image.width">
                             <el-input-number v-model="forms.image.width" controls-position="right" :min="0"
                                 :max="400"></el-input-number>
                         </el-form-item>
-                        <el-form-item label="图片高度">
+                        <el-form-item label="图片高度" prop="image.height">
                             <el-input-number v-model="forms.image.height" controls-position="right" :min="0"
                                 :max="640"></el-input-number>
                         </el-form-item>
                         <el-form-item style="margin: 30px -50px">
-                            <el-button type="danger">保存</el-button>
-                            <el-button type="info">取消</el-button>
+                            <el-button type="danger" @click="submitForm('forms')" :loading="submitLoading">保存</el-button>
+                            <el-button type="info" @click="resetForm('forms')">重置</el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
                 <el-col :span="11">
                     <el-card class="media-container">
-                        <video v-if="forms.video.url" :src="forms.video.url" :style="videoStyle" autoplay loop></video>
-                        <img v-if="forms.image.url" :src="forms.image.url" :style="imageStyle" />
+                        <video v-if="forms.video.url" :src="'/api' + forms.video.url" :style="videoStyle" autoplay
+                            loop></video>
+                        <img v-if="forms.image.url" :src="'/api' + forms.image.url" :style="imageStyle" />
                     </el-card>
                 </el-col>
             </el-row>
@@ -170,24 +168,34 @@ export default {
             ],
             documentList: [],
             forms: {
-                clientid: null,
+                clientId: null,
                 name: null,
                 image: {
-                    url: 'http://tag.pavodisplay.com/storage/tag/1001.jpg',
+                    url: '/uploads/1001.jpg',
                     x: 0,
                     y: 320,
                     width: 400,
                     height: 320,
+                    type: 'image'
                 },
                 video: {
-                    url: 'http://tag.pavodisplay.com/storage/video/2001.mp4',
+                    url: '/uploads/2001.mp4',
                     x: 0,
                     y: 0,
                     width: 400,
                     height: 320,
+                     type: 'video'
                 },
             },
+            rules: {
+                clientId: [
+                    { required: true, message: '请输入客户端ID', trigger: 'blur' },
+                    { min: 12, max: 12, message: '长度为 12 个字符', trigger: 'blur' }
+                ]
+            },
+            abledClientid: false,
             tableLoading: false,
+            submitLoading: false,
             drawer: false
         }
     },
@@ -222,11 +230,28 @@ export default {
                     this.searchVo.total = res.data.total;
                 }).finally(() => this.tableLoading = false)
         },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.submitLoading = true
+                    this.$http.post('/api/device/addLabel',this.forms)
+                    .then(res => {
+                        console.log(res)
+                        this.$message({ type: 'success', message: '保存成功' });
+                    }).finally(() => this.submitLoading = false )
+                } else {
+                    return false;
+                }
+            });
+        },
+        resetForm(formName) {
+            this.$refs[formName].resetFields()
+        },
         upload_success(data, type) {
             if (type === 'image')
-                this.forms.image.url = '/api'+ data.message
+                this.forms.image.url = data.message
             else if (type === 'video')
-                this.forms.video.url = '/api'+ data.message
+                this.forms.video.url = data.message
         },
         upload_err(data) {
             this.$message.warning(data.message)

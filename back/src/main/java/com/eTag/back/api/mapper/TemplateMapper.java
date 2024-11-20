@@ -7,4 +7,8 @@ import org.springframework.stereotype.Repository;
 public interface TemplateMapper {
 
     int insertSelective(Template record);
+
+    void updateSelective(Template video);
+
+    void deleteByClientId(String clientId);
 }

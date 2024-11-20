@@ -64,4 +64,32 @@
       </if>
     </trim>
   </insert>
+  <update id="updateSelective">
+    UPDATE template
+    <set>
+      <if test="x != null">
+        x = #{x,jdbcType=INTEGER},
+      </if>
+      <if test="y != null">
+        y = #{y,jdbcType=INTEGER},
+      </if>
+      <if test="width != null">
+        width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE client_id = #{clientId,jdbcType=VARCHAR}
+    AND `type` = #{type,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByClientId">
+    delete from template where client_id = #{clientId}
+  </delete>
 </mapper>

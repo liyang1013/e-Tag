@@ -11,4 +11,8 @@ public interface IDevicesService {
     Page<Devices> searchDevicePageHelper(SearchVo searchVo);
 
     String uploadFile(MultipartFile file) throws IOException;
+
+    void addLabel(Devices devices);
+
+    void deleteDevice(Devices devices);
 }

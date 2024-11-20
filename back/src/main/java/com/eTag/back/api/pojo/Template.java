@@ -30,6 +30,8 @@ public class Template implements Serializable {
 
     private String name;
 
+    private String url;
+
     private String md5;
 
     private String type;

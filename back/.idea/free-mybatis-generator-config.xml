@@ -51,6 +51,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="template">
+          <value>
+            <Config>
+              <option name="annotationDAO" value="true" />
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="TemplateMapper" />
+              <option name="daoPackage" value="com.eTag.back.api.mapper" />
+              <option name="daoPostfix" value="Mapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="Template" />
+              <option name="modelPackage" value="com.eTag.back.api.pojo" />
+              <option name="name" value="template" />
+              <option name="overrideJava" value="true" />
+              <option name="primaryKey" value="" />
+              <option name="projectFolder" value="$PROJECT_DIR$" />
+              <option name="tableName" value="template" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapping" />
+            </Config>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

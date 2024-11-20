@@ -11,4 +11,10 @@ public interface DevicesMapper {
     int insertSelective(Devices record);
 
     Page<Devices> searchDevicePageHelper(SearchVo searchVo);
+
+    Devices selectByClientId(String clientId);
+
+    void updateSelective(Devices update);
+
+    void deleteByClientId(String clientId);
 }
