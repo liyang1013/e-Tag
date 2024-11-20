@@ -1,11 +1,13 @@
 -- auto-generated definition
 create table template
 (
-    uuid        varchar(16) not null,
-    imageName   varchar(20) null,
-    imageHeight int         null,
-    videoName   varchar(20) null,
-    videoHeight int         null,
-    name        varchar(20) null
+    uuid      varchar(36)  not null comment '唯一主键',
+    x         int          null,
+    y         int          null,
+    width     int          null,
+    height    int          null,
+    name      varchar(100) null,
+    md5       varchar(32)  null,
+    type      varchar(10)  null,
+    client_id varchar(15)  null
 );
-
