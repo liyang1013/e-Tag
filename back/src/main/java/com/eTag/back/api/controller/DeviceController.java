@@ -56,7 +56,11 @@ public class DeviceController {
 
     @GetMapping("/getLabel")
     public LabelResult getLabel(String clientid){
+
         LabelResult result = new LabelResult();
+        result.setState("Done");
+        result.setMessage("获取成功");
+        result.setNumber("");
         result.setData(iDevicesService.getLabel(clientid));
         return result;
     }

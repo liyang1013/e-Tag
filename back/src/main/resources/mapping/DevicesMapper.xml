@@ -81,6 +81,7 @@
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
+                nlast = nlast + 1
         </set>
         where client_id = #{clientId,jdbcType=VARCHAR}
     </update>

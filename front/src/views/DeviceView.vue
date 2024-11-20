@@ -131,7 +131,8 @@
                     <el-card class="media-container">
                         <video :src="'/api/uploads/' + forms.video.name" :style="videoStyle" autoplay loop
                             muted></video>
-                        <img :src="'/api/uploads/' + forms.image.name" :style="imageStyle" />
+                        <!-- <img :src="'/api/uploads/' + forms.image.name" :style="imageStyle" /> -->
+                         <div :style="imageStyle"></div>
                     </el-card>
                 </el-col>
             </el-row>
@@ -210,15 +211,19 @@ export default {
                 top: `${this.forms.video.y}px`,
                 width: `${this.forms.video.width}px`,
                 height: `${this.forms.video.height}px`
+                
             };
         },
         imageStyle() {
             return {
                 position: 'absolute',
+                backgroundSize: '100% auto',
+                backgroundRepeat: 'repeat-y',
                 left: `${this.forms.image.x}px`,
                 top: `${this.forms.image.y}px`,
                 width: `${this.forms.image.width}px`,
-                height: `${this.forms.image.height}px`
+                height: `${this.forms.image.height}px`,
+                backgroundImage: `url(/api/uploads/${this.forms.image.name})`
             };
         },
     },

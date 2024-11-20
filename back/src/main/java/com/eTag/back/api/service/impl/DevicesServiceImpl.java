@@ -124,14 +124,15 @@ public class DevicesServiceImpl implements IDevicesService {
         label.setId(clientid);
         label.setItemCode(clientid);
         label.setItemName(clientid);
+        label.setNlast(devices.getNlast());
 
         for (Template template : templates) {
             if (template.getType().equals("image")) {
                 LabelPicture labelPicture = new LabelPicture();
-                labelPicture.setX(template.getX());
-                labelPicture.setY(template.getY());
-                labelPicture.setHeight(template.getHeight());
-                labelPicture.setWidth(template.getWidth());
+                labelPicture.setX(template.getX() * 2);
+                labelPicture.setY(template.getY()  * 2);
+                labelPicture.setHeight(template.getHeight()  * 2);
+                labelPicture.setWidth(template.getWidth()  * 2);
                 labelPicture.setPictureName(template.getName());
                 labelPicture.setPictureMD5(template.getMd5());
                 labelPicture.setPictureUrl(apiPath + template.getName());
@@ -139,10 +140,10 @@ public class DevicesServiceImpl implements IDevicesService {
             } else if (template.getType().equals("video")) {
 
                 LabelVideo labelVideo = new LabelVideo();
-                labelVideo.setX(template.getX());
-                labelVideo.setY(template.getY());
-                labelVideo.setHeight(template.getHeight());
-                labelVideo.setWidth(template.getWidth());
+                labelVideo.setX(template.getX()  * 2);
+                labelVideo.setY(template.getY()  * 2);
+                labelVideo.setHeight(template.getHeight()  * 2);
+                labelVideo.setWidth(template.getWidth()  * 2);
 
                 Video video = new Video();
                 video.setVideoName(template.getName());

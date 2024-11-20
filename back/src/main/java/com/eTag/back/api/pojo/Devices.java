@@ -61,4 +61,6 @@ public class Devices implements Serializable {
     private Template image;
 
     private Template video;
+
+    private Integer nlast;
 }
