@@ -17,4 +17,5 @@ public interface DevicesMapper {
     void updateSelective(Devices update);
 
     void deleteByClientId(String clientId);
+
 }

@@ -36,4 +36,5 @@ logging:
      com.eTag.back.* : DEBUG
 
 file:
-  upload-dir: C:\Users\JX2302304\Downloads
+  upload-dir: C:\Users\JX2302304\Downloads\
+  api-path: http://127.0.0.1:8080/uploads/

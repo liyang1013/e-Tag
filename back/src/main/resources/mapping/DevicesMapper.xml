@@ -60,9 +60,6 @@
     <update id="updateSelective">
         update devices
         <set>
-            <if test="clientId != null">
-                client_id = #{clientId,jdbcType=VARCHAR},
-            </if>
             <if test="name != null">
                 `name` = #{name,jdbcType=VARCHAR},
             </if>

@@ -3,18 +3,15 @@ package com.eTag.back.api.controller;
 import com.eTag.back.api.pojo.Devices;
 import com.eTag.back.api.service.IDevicesService;
 import com.eTag.back.entity.BaseResult;
+import com.eTag.back.entity.LabelResult;
 import com.eTag.back.entity.SearchVo;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/device")
@@ -29,9 +26,20 @@ public class DeviceController {
         return BaseResult.success(page, page.getTotal());
     }
 
+    @PostMapping("/getTemplate")
+    public BaseResult getTemplate(@RequestBody Devices devices){
+        return BaseResult.success(iDevicesService.getTemplate(devices));
+    }
+
     @PostMapping("/uploadFile")
     public BaseResult uploadFile(MultipartFile file) throws IOException {
        return BaseResult.success(iDevicesService.uploadFile(file));
+    }
+
+    @PostMapping("/enable")
+    public BaseResult enable(@RequestBody Devices devices){
+        iDevicesService.enable(devices);
+        return BaseResult.success(devices.getStatus() ? "开启标签" : "关闭标签");
     }
 
     @PostMapping("/addLabel")
@@ -44,5 +52,12 @@ public class DeviceController {
     public BaseResult deleteDevice(@RequestBody Devices devices){
         iDevicesService.deleteDevice(devices);
         return BaseResult.success();
+    }
+
+    @GetMapping("/getLabel")
+    public LabelResult getLabel(String clientid){
+        LabelResult result = new LabelResult();
+        result.setData(iDevicesService.getLabel(clientid));
+        return result;
     }
 }

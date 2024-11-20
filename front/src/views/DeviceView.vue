@@ -3,7 +3,7 @@
         <el-form ref="form" :model="searchVo" :inline="true" label-suffix=":" class="demo-form-inline">
             <el-form-item style="float:right;">
                 <el-button type="primary" @click="search()" round :loading="tableLoading">查询</el-button>
-                <el-button type="danger" round style="margin-left: 10px;" @click="drawer = true;abledClientid = false">添加标签</el-button>
+                <el-button type="danger" round style="margin-left: 10px;" @click="newLabel()">添加标签</el-button>
             </el-form-item>
             <el-form-item label="客户端ID">
                 <el-input v-model="searchVo.code" style="width: 160px;" clearable placeholder="客户端ID"></el-input>
@@ -36,16 +36,15 @@
 
             <el-table-column prop="status" label="是否启用">
                 <template slot-scope="scope">
-                    <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949">
+                    <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" @change="isEnable(scope.row)">
                     </el-switch>
-
                 </template>
             </el-table-column>
 
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" @click="confirmDelete(scope.row)">删除</el-button>
-                    <el-button type="text" @click="drawer = true;abledClientid = true">编辑</el-button>
+                    <el-button type="text" @click="edit(scope.row)">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -62,7 +61,8 @@
                     <el-form :rules="rules" style="margin-top: 20px;" label-suffix=":" label-position="left"
                         label-width="100px" :model="forms" ref="forms">
                         <el-form-item label="客户端ID" prop="clientId">
-                            <el-input v-model="forms.clientId" placeholder="蓝牙工具获取" :disabled="abledClientid"></el-input>
+                            <el-input v-model="forms.clientId" placeholder="蓝牙工具获取"
+                                :disabled="abledClientid"></el-input>
                         </el-form-item>
                         <el-form-item label="标签名" prop="name">
                             <el-input v-model="forms.name" placeholder="自定义标签名称" prop="name"></el-input>
@@ -75,8 +75,8 @@
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
-                        <el-form-item label="视频文件" prop="video.url">
-                            <el-input v-model="forms.video.url" :disabled="true"></el-input>
+                        <el-form-item label="视频文件" prop="video.name">
+                            <el-input v-model="forms.video.name" :disabled="true"></el-input>
                         </el-form-item>
                         <el-form-item label="左边距(X)" prop="video.x">
                             <el-input-number v-model="forms.video.x" controls-position="right" :min="0"
@@ -101,8 +101,8 @@
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
-                        <el-form-item label="图片文件" prop="image.url">
-                            <el-input v-model="forms.image.url" :disabled="true"></el-input>
+                        <el-form-item label="图片文件" prop="image.name">
+                            <el-input v-model="forms.image.name" :disabled="true"></el-input>
                         </el-form-item>
                         <el-form-item label="左边距(X)" prop="image.x">
                             <el-input-number v-model="forms.image.x" controls-position="right" :min="0"
@@ -121,16 +121,17 @@
                                 :max="640"></el-input-number>
                         </el-form-item>
                         <el-form-item style="margin: 30px -50px">
-                            <el-button type="danger" @click="submitForm('forms')" :loading="submitLoading">保存</el-button>
+                            <el-button type="danger" @click="submitForm('forms')"
+                                :loading="submitLoading">保存</el-button>
                             <el-button type="info" @click="resetForm('forms')">重置</el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
                 <el-col :span="11">
                     <el-card class="media-container">
-                        <video v-if="forms.video.url" :src="'/api' + forms.video.url" :style="videoStyle" autoplay
-                            loop></video>
-                        <img v-if="forms.image.url" :src="'/api' + forms.image.url" :style="imageStyle" />
+                        <video :src="'/api/uploads/' + forms.video.name" :style="videoStyle" autoplay loop
+                            muted></video>
+                        <img :src="'/api/uploads/' + forms.image.name" :style="imageStyle" />
                     </el-card>
                 </el-col>
             </el-row>
@@ -171,7 +172,7 @@ export default {
                 clientId: null,
                 name: null,
                 image: {
-                    url: '/uploads/1001.jpg',
+                    name: '1001.jpg',
                     x: 0,
                     y: 320,
                     width: 400,
@@ -179,13 +180,13 @@ export default {
                     type: 'image'
                 },
                 video: {
-                    url: '/uploads/2001.mp4',
+                    name: '2001.mp4',
                     x: 0,
                     y: 0,
                     width: 400,
                     height: 320,
-                     type: 'video'
-                },
+                    type: 'video'
+                }
             },
             rules: {
                 clientId: [
@@ -193,6 +194,7 @@ export default {
                     { min: 12, max: 12, message: '长度为 12 个字符', trigger: 'blur' }
                 ]
             },
+            editTemp: {},
             abledClientid: false,
             tableLoading: false,
             submitLoading: false,
@@ -230,31 +232,34 @@ export default {
                     this.searchVo.total = res.data.total;
                 }).finally(() => this.tableLoading = false)
         },
+        newLabel() {
+            this.drawer = true;
+            this.abledClientid = false
+            this.$refs.forms.resetFields()
+        },
+        isEnable(row){
+            this.$http.post('/api/device/enable',row)
+        },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.submitLoading = true
-                    this.$http.post('/api/device/addLabel',this.forms)
-                    .then(res => {
-                        console.log(res)
-                        this.$message({ type: 'success', message: '保存成功' });
-                    }).finally(() => this.submitLoading = false )
+                    this.$http.post('/api/device/addLabel', this.forms)
+                        .then(res => {
+                            if (res.data.status === 200) {
+                                this.$message({ type: 'success', message: '保存成功' });
+                                this.editTemp = JSON.parse(JSON.stringify(this.forms));
+                            }
+                        }).finally(() => this.submitLoading = false)
                 } else {
                     return false;
                 }
             });
         },
         resetForm(formName) {
-            this.$refs[formName].resetFields()
-        },
-        upload_success(data, type) {
-            if (type === 'image')
-                this.forms.image.url = data.message
-            else if (type === 'video')
-                this.forms.video.url = data.message
-        },
-        upload_err(data) {
-            this.$message.warning(data.message)
+            if (this.abledClientid) {
+                this.forms = JSON.parse(JSON.stringify(this.editTemp));
+            } else this.$refs[formName].resetFields()
         },
         confirmDelete(row) {
             this.$confirm('此操作将永久删除该电子标签, 是否继续?', '提示', {
@@ -274,6 +279,33 @@ export default {
                     this.search()
                 }
             })
+        },
+        edit(row) {
+            this.drawer = true;
+            this.abledClientid = true
+            this.$http.post('/api/device/getTemplate', row).then(res => {
+                if (res.data.status === 200) {
+                    this.editTemp = {
+                        clientId: row.clientId,
+                        name: row.name,
+                        image: res.data.result.find(item => item.type === 'image'),
+                        video: res.data.result.find(item => item.type === 'video')
+                    }
+                    this.forms = JSON.parse(JSON.stringify(this.editTemp));
+                    this.$nextTick(() => {
+                        this.$refs.forms.clearValidate(['clientId']);
+                    });
+                }
+            })
+        },
+        upload_success(data, type) {
+            if (type === 'image')
+                this.forms.image.name = data.message
+            else if (type === 'video')
+                this.forms.video.name = data.message
+        },
+        upload_err(data) {
+            this.$message.warning(data.message)
         },
         handleCurrentChange(val) {
             this.search(val);

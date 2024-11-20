@@ -92,4 +92,9 @@
   <delete id="deleteByClientId">
     delete from template where client_id = #{clientId}
   </delete>
+  <select id="getTemplateByClientId" resultType="com.eTag.back.api.pojo.Template">
+    select *
+    from template
+    where client_id = #{clientId}
+  </select>
 </mapper>

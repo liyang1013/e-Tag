@@ -1,13 +1,11 @@
 package com.eTag.back.api.service.impl;
 
 import cn.hutool.core.lang.UUID;
-import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.crypto.digest.MD5;
+import cn.hutool.json.JSONUtil;
 import com.eTag.back.api.mapper.DevicesMapper;
 import com.eTag.back.api.mapper.TemplateMapper;
-import com.eTag.back.api.pojo.Devices;
-import com.eTag.back.api.pojo.Template;
+import com.eTag.back.api.pojo.*;
 import com.eTag.back.api.service.IDevicesService;
 import com.eTag.back.entity.SearchVo;
 import com.github.pagehelper.Page;
@@ -22,13 +20,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class DevicesServiceImpl implements IDevicesService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
+    @Value("${file.api-path}")
+    private String apiPath;
     @Resource
     private DevicesMapper devicesMapper;
     @Resource
@@ -43,44 +45,32 @@ public class DevicesServiceImpl implements IDevicesService {
     public String uploadFile(MultipartFile file) throws IOException {
 
         if (file.isEmpty()) throw new RuntimeException("文件不能为空");
-
         //todo 根据MD5检查重复文件
-
         String fileName = file.getOriginalFilename();
         Path filePath = Paths.get(uploadDir, fileName);
         Files.write(filePath, file.getBytes());
-        String fileUrl = "/uploads/" + fileName;
-
-        return fileUrl;
+        return fileName;
     }
 
     @Override
     @Transactional
     public void addLabel(Devices devices) {
-        System.out.println(devices);
-
         Devices isExist = devicesMapper.selectByClientId(devices.getClientId());
         //新增
         if (isExist == null) {
-            Devices insert = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).status(true)
-                    .createTime(new Date()).createUser("admin").build();
+            Devices insert = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).status(true).createTime(new Date()).createUser("admin").build();
             devicesMapper.insertSelective(insert);
 
             Template image = devices.getImage();
-
             image.setUuid(UUID.randomUUID().toString());
-            image.setName(image.getUrl());
-            File imageFile = new File(image.getUrl().replace("/uploads/", uploadDir + "/"));
+            File imageFile = new File(uploadDir + image.getName());
             image.setMd5(DigestUtil.md5Hex(imageFile));
             image.setClientId(insert.getClientId());
             templateMapper.insertSelective(image);
 
-
             Template video = devices.getVideo();
-
             video.setUuid(UUID.randomUUID().toString());
-            video.setName(image.getUrl());
-            File videoFile = new File(video.getUrl().replace("/uploads/", uploadDir + "/"));
+            File videoFile = new File(uploadDir + video.getName());
             video.setMd5(DigestUtil.md5Hex(videoFile));
             video.setClientId(insert.getClientId());
             templateMapper.insertSelective(video);
@@ -88,21 +78,17 @@ public class DevicesServiceImpl implements IDevicesService {
             //覆盖
         } else {
 
-            Devices update = Devices.builder().clientId(devices.getClientId()).name(devices.getName())
-                    .updateTime(new Date()).updateUser("admin").build();
+            Devices update = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).updateTime(new Date()).updateUser("admin").build();
             devicesMapper.updateSelective(update);
 
             Template image = devices.getImage();
-
-            image.setName(image.getUrl());
-            File imageFile = new File(image.getUrl().replace("/uploads/", uploadDir + "/"));
+            File imageFile = new File(uploadDir + image.getName());
             image.setMd5(DigestUtil.md5Hex(imageFile));
             image.setClientId(update.getClientId());
             templateMapper.updateSelective(image);
 
             Template video = devices.getVideo();
-            video.setName(video.getUrl());
-            File videoFile = new File(video.getUrl().replace("/uploads/", uploadDir + "/"));
+            File videoFile = new File(uploadDir + video.getName());
             video.setMd5(DigestUtil.md5Hex(videoFile));
             video.setClientId(update.getClientId());
             templateMapper.updateSelective(video);
@@ -115,5 +101,63 @@ public class DevicesServiceImpl implements IDevicesService {
     public void deleteDevice(Devices devices) {
         devicesMapper.deleteByClientId(devices.getClientId());
         templateMapper.deleteByClientId(devices.getClientId());
+    }
+
+    @Override
+    public List<Template> getTemplate(Devices devices) {
+        return templateMapper.getTemplateByClientId(devices.getClientId());
+    }
+
+    @Override
+    public void enable(Devices devices) {
+        Devices update = Devices.builder().clientId(devices.getClientId()).status(devices.getStatus()).build();
+        devicesMapper.updateSelective(update);
+    }
+
+    @Override
+    public String getLabel(String clientid) {
+
+        Devices devices = devicesMapper.selectByClientId(clientid);
+        List<Template> templates = templateMapper.getTemplateByClientId(clientid);
+
+        Label label = new Label();
+        label.setId(clientid);
+        label.setItemCode(clientid);
+        label.setItemName(clientid);
+
+        for (Template template : templates) {
+            if (template.getType().equals("image")) {
+                LabelPicture labelPicture = new LabelPicture();
+                labelPicture.setX(template.getX());
+                labelPicture.setY(template.getY());
+                labelPicture.setHeight(template.getHeight());
+                labelPicture.setWidth(template.getWidth());
+                labelPicture.setPictureName(template.getName());
+                labelPicture.setPictureMD5(template.getMd5());
+                labelPicture.setPictureUrl(apiPath + template.getName());
+                label.setLabelPicture(labelPicture);
+            } else if (template.getType().equals("video")) {
+
+                LabelVideo labelVideo = new LabelVideo();
+                labelVideo.setX(template.getX());
+                labelVideo.setY(template.getY());
+                labelVideo.setHeight(template.getHeight());
+                labelVideo.setWidth(template.getWidth());
+
+                Video video = new Video();
+                video.setVideoName(template.getName());
+                video.setVideoUrl(apiPath + template.getName());
+                video.setVideoNo(1);
+                video.setVideoMD5(template.getMd5());
+
+                labelVideo.setVideoList(new ArrayList<>());
+                labelVideo.getVideoList().add(video);
+
+                label.setLabelVideo(labelVideo);
+            }
+        }
+
+        return JSONUtil.toJsonStr(label);
+
     }
 }
