@@ -105,6 +105,12 @@
     </select>
     <select id="selectByClientId" resultType="com.eTag.back.api.pojo.Devices">
         select *
-        from devices where client_id = #{clientId}
+        from devices
+        <where>
+            client_id = #{clientId}
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
     </select>
 </mapper>

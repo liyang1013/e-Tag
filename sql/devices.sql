@@ -1,6 +1,8 @@
+-- auto-generated definition
 create table devices
 (
     client_id   varchar(15)                null comment '价签序列号',
+    nlast       int        default 0       null,
     name        varchar(20)                null comment '自定义名称',
     last_time   datetime                   null comment '最近一次标签获取时间',
     update_time datetime                   null comment '修改时间',
@@ -11,3 +13,4 @@ create table devices
     constraint devices_pk
         unique (client_id)
 );
+

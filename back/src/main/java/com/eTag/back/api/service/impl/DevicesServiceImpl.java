@@ -55,7 +55,7 @@ public class DevicesServiceImpl implements IDevicesService {
     @Override
     @Transactional
     public void addLabel(Devices devices) {
-        Devices isExist = devicesMapper.selectByClientId(devices.getClientId());
+        Devices isExist = devicesMapper.selectByClientId(devices.getClientId(), null);
         //新增
         if (isExist == null) {
             Devices insert = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).status(true).createTime(new Date()).createUser("admin").build();
@@ -117,7 +117,7 @@ public class DevicesServiceImpl implements IDevicesService {
     @Override
     public String getLabel(String clientid) {
 
-        Devices devices = devicesMapper.selectByClientId(clientid);
+        Devices devices = devicesMapper.selectByClientId(clientid, true);
         List<Template> templates = templateMapper.getTemplateByClientId(clientid);
 
         Label label = new Label();
