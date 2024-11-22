@@ -16,6 +16,11 @@ const routes = [
         component: () => import('@/views/ETagIndex')
     },
     {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/LoginView')
+    },
+    {
         path: '*',
         name: '404',
         component: () => import('@/views/exception/404')

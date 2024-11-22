@@ -1,2 +1,4 @@
-package com.eTag.back.exception;public class ELabelException {
+package com.eTag.back.exception;
+
+public class ELabelException {
 }

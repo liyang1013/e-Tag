@@ -37,5 +37,9 @@ logging:
 
 file:
   upload-dir: C:\Users\JX2302304\Downloads\
-  api-path: http://192.168.124.214:8080/uploads/
+  api-path: http://172.17.168.89:8080/uploads/
+
+jwt:
+  secret: ABCDEFG
+  expiration: 86400000
 

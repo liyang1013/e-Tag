@@ -8,7 +8,8 @@ export default new Vuex.Store({
     state: {
         isSidebarNavCollapse: false,
         currentMenu: 'home',
-        activeMenuList: []
+        activeMenuList: [],
+        token: null
     },
     getters: {},
     mutations: {
