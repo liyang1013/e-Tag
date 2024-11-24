@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from "@/router";
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex)
 
@@ -11,13 +12,20 @@ export default new Vuex.Store({
         activeMenuList: [],
         token: null
     },
-    getters: {},
+    getters: {
+        getToken(state){
+           return state.token
+        }
+    },
     mutations: {
         toggleNavCollapse(state) {
             state.isSidebarNavCollapse = !state.isSidebarNavCollapse
         },
         SET_CURRENT_MENU(state, currentMenu) {
             state.currentMenu = currentMenu
+        },
+        setToken(state, newToken){
+            state.token = newToken
         },
         addMenu(state, menu) {
             let index = state.activeMenuList.findIndex(item => {
@@ -37,8 +45,17 @@ export default new Vuex.Store({
                 state.currentMenu = path
             }
             router.push(path);
-        }
+        },
+       
     },
+    plugins: [createPersistedState({
+           
+        storage: window.sessionStorage, 
+        key: 'vuex', // 存储在 localStorage 或 sessionStorage 中的键名
+        // 如果你只想持久化部分状态，可以使用 `include` 或 `exclude`
+        include: ['token'], // 只持久化指定的状态
+        // exclude: ['otherState'], // 不持久化指定的状态
+      })],
     actions: {},
     modules: {}
 })

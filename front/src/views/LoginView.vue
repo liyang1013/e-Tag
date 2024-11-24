@@ -3,13 +3,15 @@
         <el-form :model="user" label-width="80px" class="login-box" label-position="left">
             <h3 class="login-title">欢迎登录</h3>
             <el-form-item label="用户名:">
-                <el-input type="text" placeholder="请输入用户名" v-model="user.username" />
+                <el-input ref="un" type="text" placeholder="请输入用户名" v-model="user.username"
+                    @keyup.enter.native="$refs.pwd.focus();" />
             </el-form-item>
             <el-form-item label="密码:">
-                <el-input type="password" placeholder="请输入密码" v-model="user.password" />
+                <el-input ref="pwd" type="password" placeholder="请输入密码" v-model="user.password"
+                    @keyup.enter.native="login()" />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="login" >登录</el-button>
+                <el-button type="primary" @click="login()">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -23,23 +25,26 @@ export default {
             user: {
                 username: '',
                 password: ''
-            },
-            tips: '',
-            dialogVisible: false
+            }
         }
     },
     methods: {
         login() {
-            if (this.user.username === '') { this.dialog("用户名不能为空"); return; }
-            if (this.user.password === '') { this.dialog("密码不能为空"); return; }
-            this.$http.post("/api/user/login", this.user)
-                .then(response => {
-                    if (response.data.status === 200)
-                        location.href = "/main";
-                    else this.dialog('用户名或密码错误');
-                }).catch(error => console.log(error));
-        },
-        dialog(msg) { this.dialogVisible = true; this.tips = msg }
+            if (this.user.username === '') { this.$message({ type: 'warning', message: '用户名不能为空' }); return; }
+            if (this.user.password === '') { this.$message({ type: 'warning', message: '密码不能为空' }); return; }
+            if (this.user.username === 'admin' && this.user.password === 'admin') {
+                this.$store.commit('setToken', 'templateToken')
+                this.$router.push({ name: 'eTag' });
+            } else {
+                this.$message({ type: 'error', message: '账号或者密码错误' });
+            }
+
+        }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.$refs.un.focus();
+        });
     }
 }
 </script>
@@ -59,15 +64,16 @@ export default {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    width: 400px; 
-    text-align: left; 
+    width: 400px;
+    text-align: left;
 }
 
 .login-title {
     margin-bottom: 20px;
     color: #333;
     font-size: 24px;
-    text-align: center; /* 标题仍然居中 */
+    text-align: center;
+    /* 标题仍然居中 */
 }
 
 .el-form-item {
@@ -95,6 +101,7 @@ export default {
 .error-message {
     color: red;
     margin-top: 10px;
-    text-align: center; /* 错误消息居中 */
+    text-align: center;
+    /* 错误消息居中 */
 }
 </style>

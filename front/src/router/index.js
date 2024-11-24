@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -47,10 +48,10 @@ const router = new VueRouter({
  * 路由守护
  */
 router.beforeEach((to, from, next) => {
-    if(to.meta.title) {
-        document.title = to.meta.title
-    }
-    next();
+    if(to.name !== 'login' && store.state.token === null){
+        next('/login')
+    }else
+        next();
 })
 
 export default router
