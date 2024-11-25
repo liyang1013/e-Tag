@@ -6161,7 +6161,7 @@ vue@^2.6.14:
 
 vuex-persistedstate@^4.1.0:
   version "4.1.0"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/vuex-persistedstate/-/vuex-persistedstate-4.1.0.tgz#127165f85f5b4534fb3170a5d3a8be9811bd2a53"
+  resolved "https://registry.npmmirror.com/vuex-persistedstate/-/vuex-persistedstate-4.1.0.tgz#127165f85f5b4534fb3170a5d3a8be9811bd2a53"
   integrity sha512-3SkEj4NqwM69ikJdFVw6gObeB0NHyspRYMYkR/EbhR0hbvAKyR5gksVhtAfY1UYuWUOCCA0QNGwv9pOwdj+XUQ==
   dependencies:
     deepmerge "^4.2.2"

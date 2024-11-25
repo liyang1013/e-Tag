@@ -51,4 +51,9 @@
       </if>
     </trim>
   </insert>
+    <select id="selectByUsername" resultType="com.eTag.back.api.pojo.User">
+      select *
+        from user
+        where username = #{username} and passwd = #{passwd}
+    </select>
 </mapper>

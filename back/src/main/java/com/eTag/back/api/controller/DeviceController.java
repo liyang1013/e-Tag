@@ -1,5 +1,6 @@
 package com.eTag.back.api.controller;
 
+import cn.hutool.jwt.JWT;
 import com.eTag.back.api.pojo.Devices;
 import com.eTag.back.api.service.IDevicesService;
 import com.eTag.back.entity.BaseResult;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
@@ -21,6 +23,7 @@ public class DeviceController {
 
     @PostMapping("/searchDevicePageHelper")
     public BaseResult searchDevicePageHelper(@RequestBody SearchVo searchVo) {
+
         PageHelper.startPage(searchVo.getCurrentPage(), searchVo.getSize());
         Page<Devices> page = iDevicesService.searchDevicePageHelper(searchVo);
         return BaseResult.success(page, page.getTotal());

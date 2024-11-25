@@ -41,5 +41,11 @@ public class User implements Serializable {
      */
     private Boolean status;
 
+
+    private String appSecret;
+
+
+    private Date licenseTime;
+
     private static final long serialVersionUID = 1L;
 }

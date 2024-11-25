@@ -19,9 +19,9 @@ public class ParamExceptionConfig {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public BaseResult handleRuntimeException(RuntimeException e) {
-        e.printStackTrace();
-        return BaseResult.fail("运行异常:"+e.getMessage());
+    public BaseResult handleRuntimeException(RuntimeException exception) {
+        exception.printStackTrace();
+        return BaseResult.fail("运行异常:"+exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

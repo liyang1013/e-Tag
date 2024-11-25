@@ -50,11 +50,10 @@ export default new Vuex.Store({
     },
     plugins: [createPersistedState({
            
-        storage: window.sessionStorage, 
-        key: 'vuex', // 存储在 localStorage 或 sessionStorage 中的键名
-        // 如果你只想持久化部分状态，可以使用 `include` 或 `exclude`
-        include: ['token'], // 只持久化指定的状态
-        // exclude: ['otherState'], // 不持久化指定的状态
+        storage: window.localStorage, 
+        key: 'vuex', 
+        include: ['token'], 
+        exclude: ['isSidebarNavCollapse','currentMenu','activeMenuList'] 
       })],
     actions: {},
     modules: {}

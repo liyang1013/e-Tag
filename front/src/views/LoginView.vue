@@ -7,7 +7,7 @@
                     @keyup.enter.native="$refs.pwd.focus();" />
             </el-form-item>
             <el-form-item label="密码:">
-                <el-input ref="pwd" type="password" placeholder="请输入密码" v-model="user.password"
+                <el-input ref="pwd" type="password" placeholder="请输入密码" v-model="user.passwd"
                     @keyup.enter.native="login()" />
             </el-form-item>
             <el-form-item>
@@ -24,21 +24,21 @@ export default {
         return {
             user: {
                 username: '',
-                password: ''
+                passwd: ''
             }
         }
     },
     methods: {
         login() {
             if (this.user.username === '') { this.$message({ type: 'warning', message: '用户名不能为空' }); return; }
-            if (this.user.password === '') { this.$message({ type: 'warning', message: '密码不能为空' }); return; }
-            if (this.user.username === 'admin' && this.user.password === 'admin') {
-                this.$store.commit('setToken', 'templateToken')
-                this.$router.push({ name: 'eTag' });
-            } else {
-                this.$message({ type: 'error', message: '账号或者密码错误' });
-            }
+            if (this.user.passwd === '') { this.$message({ type: 'warning', message: '密码不能为空' }); return; }
 
+            this.$http.post('/api/auth/login', this.user).then(res => {
+                if (res.data.status === 200) {
+                    this.$store.commit('setToken', res.data.message)
+                    this.$router.push({ name: 'eTag' });
+                }
+            })
         }
     },
     mounted() {
