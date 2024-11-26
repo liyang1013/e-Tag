@@ -54,6 +54,6 @@
     <select id="selectByUsername" resultType="com.eTag.back.api.pojo.User">
       select *
         from user
-        where username = #{username} and passwd = #{passwd}
+        where username = #{username}
     </select>
 </mapper>

@@ -47,5 +47,7 @@ public class User implements Serializable {
 
     private Date licenseTime;
 
+    private String role;
+
     private static final long serialVersionUID = 1L;
 }

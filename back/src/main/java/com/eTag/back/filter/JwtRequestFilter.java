@@ -1,8 +1,11 @@
 package com.eTag.back.filter;
 
-import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.JWTValidator;
-import org.springframework.beans.factory.annotation.Value;
+import com.eTag.back.utils.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -11,36 +14,38 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response, FilterChain filterChain) throws  ServletException, IOException {
-        final String token = request.getHeader("token");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+
+        final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
-        JWT jwt = JWT.of(token);
-        if (token != null) {
-            username = jwt.getPayload("name").toString();
-            System.out.println("username:"+ username);
+        String jwt = null;
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            jwt = authorizationHeader.substring(7);
+            username = jwtTokenUtil.getUsernameFromToken(jwt);
         }
 
-        boolean b = jwt.setKey(secret.getBytes()).verify();
-
-        System.out.println("验证签名结果:"+b);
-
-        boolean a = jwt.setKey(secret.getBytes()).validate(0);
-
-        System.out.println("验证Token:"+a);
-
-        JWTValidator re = JWTValidator.of(token).validateDate(new Date());
-
-
-        filterChain.doFilter(request, response);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            if (jwtTokenUtil.validateToken(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+        }
+        chain.doFilter(request, response);
     }
 }

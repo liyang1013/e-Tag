@@ -9,5 +9,5 @@ public interface UserMapper {
 
     int insertSelective(User record);
 
-    User selectByUsername(@Param("username") String username, @Param("passwd") String passwd);
+    User selectByUsername(@Param("username") String username);
 }
