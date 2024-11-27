@@ -1,14 +1,17 @@
 package com.eTag.back.api.pojo;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * user
  */
 @Data
-public class User implements Serializable {
+public class User implements UserDetails {
     private Integer uid;
 
     /**
@@ -19,7 +22,9 @@ public class User implements Serializable {
     /**
      * 密码
      */
-    private String passwd;
+    private String password;
+
+    private Collection<? extends GrantedAuthority> authorities;
 
     /**
      * 上次登入时间
@@ -50,4 +55,34 @@ public class User implements Serializable {
     private String role;
 
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

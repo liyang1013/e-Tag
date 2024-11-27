@@ -7,7 +7,7 @@
                     @keyup.enter.native="$refs.pwd.focus();" />
             </el-form-item>
             <el-form-item label="密码:">
-                <el-input ref="pwd" type="password" placeholder="请输入密码" v-model="user.passwd"
+                <el-input ref="pwd" type="password" placeholder="请输入密码" v-model="user.password"
                     @keyup.enter.native="login()" />
             </el-form-item>
             <el-form-item>
@@ -24,14 +24,14 @@ export default {
         return {
             user: {
                 username: '',
-                passwd: ''
+                password: ''
             }
         }
     },
     methods: {
         login() {
             if (this.user.username === '') { this.$message({ type: 'warning', message: '用户名不能为空' }); return; }
-            if (this.user.passwd === '') { this.$message({ type: 'warning', message: '密码不能为空' }); return; }
+            if (this.user.password === '') { this.$message({ type: 'warning', message: '密码不能为空' }); return; }
 
             this.$http.post('/api/auth/login', this.user).then(res => {
                 if (res.data.status === 200) {
