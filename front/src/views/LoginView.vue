@@ -24,7 +24,9 @@ export default {
         return {
             user: {
                 username: '',
-                password: ''
+                password: '',
+                ipAddress: null,
+                city: null
             }
         }
     },
@@ -32,7 +34,6 @@ export default {
         login() {
             if (this.user.username === '') { this.$message({ type: 'warning', message: '用户名不能为空' }); return; }
             if (this.user.password === '') { this.$message({ type: 'warning', message: '密码不能为空' }); return; }
-
             this.$http.post('/api/auth/login', this.user).then(res => {
                 if (res.data.status === 200) {
                     localStorage.setItem('token',res.data.message)
@@ -40,12 +41,23 @@ export default {
                     this.$router.push({ name: 'eTag' });
                 }
             })
+        },
+        getIpInfo(){
+            this.$http.get('https://qifu.baidu.com/ip/local/geo/v1/district').then(res => {
+                if(res.data.code === 'Success'){
+                    const info = res.data
+                    this.user.ipAddress = info.ip
+                    this.user.city = info.data.country + info.data.prov + info.data.city + info.data.district
+                }
+            })
         }
     },
     mounted() {
         this.$nextTick(() => {
             this.$refs.un.focus();
+            this.getIpInfo()
         });
+       
     }
 }
 </script>

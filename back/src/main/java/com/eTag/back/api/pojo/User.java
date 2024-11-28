@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,12 +32,13 @@ public class User implements UserDetails {
     /**
      * 上次登入时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLoginTime;
 
     /**
      * 登入地址
      */
-    private Integer ipAddress;
+    private String ipAddress;
 
     /**
      * 设备许可
@@ -56,6 +58,7 @@ public class User implements UserDetails {
     /**
      * 到期时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date licenseTime;
 
     /**

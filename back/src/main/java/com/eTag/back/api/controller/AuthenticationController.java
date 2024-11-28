@@ -8,6 +8,7 @@ import com.eTag.back.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +27,15 @@ public class AuthenticationController {
     private UserServiceImpl userDetailsService;
 
     @PostMapping("/login")
-    public BaseResult createAuthenticationToken(@RequestBody User user, HttpServletRequest request) {
+    public BaseResult createAuthenticationToken(@RequestBody User user) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         User userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String token = JwtUtil.generateToken(userDetails.getUsername());
         Object exp = JWTUtil.parseToken(token).getPayload("exp");
 
-        System.out.println(request.getRemoteAddr());
-        return BaseResult.success( exp, token);
+        userDetailsService.writeLoginInfo(user);
+
+        return BaseResult.success(exp, token);
     }
 }

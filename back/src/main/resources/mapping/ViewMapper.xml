@@ -10,8 +10,8 @@
   <select id="getViewByUserid" resultType="com.eTag.back.api.pojo.View">
       select v.*
       from view v
-               left join user_view t on t.view_id = v.id
-               left join user u on u.uid = t.user_id
+               left join role_view t on t.view_id = v.id
+               left join user u on u.role = t.role_id
       where u.uid = #{uid}
       order by sort
   </select>

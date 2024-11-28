@@ -44,7 +44,7 @@
         #{lastLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="ipAddress != null">
-        #{ipAddress,jdbcType=INTEGER},
+        #{ipAddress,jdbcType=VARCHAR},
       </if>
       <if test="appid != null">
         #{appid,jdbcType=VARCHAR},
@@ -57,7 +57,12 @@
       </if>
     </trim>
   </insert>
-    <select id="selectByUsername" resultType="com.eTag.back.api.pojo.User">
+  <update id="writeLoginInfo">
+    update user
+    set ip_address = #{ipAddress}, city = #{city}, last_login_time = now()
+    where username = #{username}
+  </update>
+  <select id="selectByUsername" resultType="com.eTag.back.api.pojo.User">
       select *
         from user
         where username = #{username}

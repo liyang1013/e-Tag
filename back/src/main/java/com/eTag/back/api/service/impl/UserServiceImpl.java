@@ -25,4 +25,9 @@ public class UserServiceImpl implements UserDetailsService {
     public Page<User> searchUserPageHelper(SearchVo searchVo) {
         return userMapper.searchUserPageHelper(searchVo);
     }
+
+
+    public void writeLoginInfo(User user) {
+        userMapper.writeLoginInfo(user);
+    }
 }

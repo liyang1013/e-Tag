@@ -14,4 +14,6 @@ public interface UserMapper {
     User selectByUsername(@Param("username") String username);
 
     Page<User> searchUserPageHelper(SearchVo searchVo);
+
+    void writeLoginInfo(User user);
 }
