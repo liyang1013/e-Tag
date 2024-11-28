@@ -1,21 +1,23 @@
 export const menu = [
     {
-        name: '首页',
         path: 'home',
-        icon: 'el-icon-s-home',
         component: () => import('@/views/HomeView')
     },
-    // {
-    //     name: '标准模板',
-    //     path: 'template',
-    //     icon: 'el-icon-picture',
-    //     component: () => import('@/views/TemplateView')
-    // },
     {
-        name: '设备列表',
         path: 'device',
-        icon: 'el-icon-s-platform',
         component: () => import('@/views/DeviceView')
+    },
+    {
+        path: 'user',
+        component: () => import('@/views/UserView')
+    },
+    {
+        path: 'template',
+        component: () => import('@/views/TemplateView')
+    },
+    {
+        path: 'info',
+        component: () => import('@/views/InfoView')
     }
 ]
 

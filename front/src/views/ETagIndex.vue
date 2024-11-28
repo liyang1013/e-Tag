@@ -1,6 +1,6 @@
 <template>
   <div :class="{ navCollapsed: isSidebarNavCollapse }">
-    <sidebarNav class="sidebar" :menu="menuList" />
+    <sidebarNav class="sidebar" :menu="arr" />
     <div class="main-container">
       <TopAside />
       <el-card class="box-card" shadow="always">
@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       menuList: menu,
+      arr: []
     }
   },
   computed: {
@@ -54,9 +55,15 @@ export default {
         }
         router.addRoute('eTag', temp)
       })
+    },
+    getView() {
+      this.$http.get('/api/view/getView').then(res => {
+        this.arr = res.data.result
+      })
     }
   },
   mounted() {
+    this.getView()
     this.routesData(this.filterRoute(menu))
     this.$router.push('/eTag/home')
   }
@@ -68,19 +75,13 @@ export default {
   height: 100vh;
   background-color: rgb(240 242 245);
 
-
   .box-card {
     padding: 0;
-
     .content {
       width: 100%;
       height: calc(100vh - 120px);
-      // overflow-y: auto;
-      // overflow-x: hidden;
       overflow: hidden;
     }
-
-
   }
 }
 </style>
