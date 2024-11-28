@@ -38,7 +38,3 @@ logging:
 file:
   upload-dir: /vol1/1000/eTag/file/
   api-path: http://liyang.chat:18888/uploads/
-
-jwt:
-  secret: ABCDEFG
-  expiration: 86400000

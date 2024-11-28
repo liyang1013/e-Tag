@@ -14,6 +14,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final String SECRET_KEY = "4f848367-b85a-453a-b0bb-8d9ef58d348c";
+
     private static final long EXPIRATION_TIME = 60L * 60L * 1000L;
 
     private static final JWTSigner signer = JWTSignerUtil.hs256(SECRET_KEY.getBytes());

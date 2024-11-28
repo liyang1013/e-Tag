@@ -17,7 +17,9 @@
             </el-table-column>
             <el-table-column prop="role" label="角色">
             </el-table-column>
-            <el-table-column prop="lastLoginTime" label="最近登入时间">
+            <el-table-column prop="lastLoginTime" label="登入时间">
+            </el-table-column>
+            <el-table-column prop="city" label="登入地址">
             </el-table-column>
             <el-table-column prop="ipAddress" label="最近登入IP">
             </el-table-column>
