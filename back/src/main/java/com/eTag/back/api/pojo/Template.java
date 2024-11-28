@@ -36,5 +36,7 @@ public class Template implements Serializable {
 
     private String clientId;
 
+    private Integer Nlast;
+
     private static final long serialVersionUID = 1L;
 }

@@ -1,6 +1,8 @@
 package com.eTag.back.api.mapper;
 
 import com.eTag.back.api.pojo.User;
+import com.eTag.back.entity.SearchVo;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +12,6 @@ public interface UserMapper {
     int insertSelective(User record);
 
     User selectByUsername(@Param("username") String username);
+
+    Page<User> searchUserPageHelper(SearchVo searchVo);
 }

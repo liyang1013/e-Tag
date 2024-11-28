@@ -8,8 +8,10 @@ import com.eTag.back.api.mapper.TemplateMapper;
 import com.eTag.back.api.pojo.*;
 import com.eTag.back.api.service.IDevicesService;
 import com.eTag.back.entity.SearchVo;
+import com.eTag.back.exception.ELabelException;
 import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,7 @@ public class DevicesServiceImpl implements IDevicesService {
 
     @Override
     public Page<Devices> searchDevicePageHelper(SearchVo searchVo) {
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return devicesMapper.searchDevicePageHelper(searchVo);
     }
 
@@ -118,6 +121,7 @@ public class DevicesServiceImpl implements IDevicesService {
     public String getLabel(String clientid) {
 
         Devices devices = devicesMapper.selectByClientId(clientid, true);
+        if(devices == null) throw new ELabelException("设备clientid错误或者不可用");
         List<Template> templates = templateMapper.getTemplateByClientId(clientid);
 
         Label label = new Label();

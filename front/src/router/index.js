@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '@/store'
+import { Message } from 'element-ui'
 
 Vue.use(VueRouter)
 
@@ -48,7 +48,8 @@ const router = new VueRouter({
  * 路由守护
  */
 router.beforeEach((to, from, next) => {
-    if(to.name !== 'login' && store.state.token === null){
+    if(to.name !== 'login' && (localStorage.getItem('token') == null || localStorage.getItem('exp') < Math.floor(new Date().getTime() / 1000) )){
+        Message.warning("登入失效，请重新登入");
         next('/login')
     }else
         next();

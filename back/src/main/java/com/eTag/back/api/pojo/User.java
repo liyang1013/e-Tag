@@ -1,10 +1,12 @@
 package com.eTag.back.api.pojo;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.*;
+
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -37,28 +39,35 @@ public class User implements UserDetails {
     private Integer ipAddress;
 
     /**
-     * 用户许可
+     * 设备许可
      */
     private String appid;
+
+    private String appSecret;
 
     /**
      * 状态
      */
     private Boolean status;
 
+    private String city;
 
-    private String appSecret;
 
-
+    /**
+     * 到期时间
+     */
     private Date licenseTime;
 
+    /**
+     * 角色
+     */
     private String role;
 
-    private static final long serialVersionUID = 1L;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+
+        return new ArrayList<>(Collections.singleton(new SimpleGrantedAuthority(this.role)));
     }
 
     @Override
@@ -68,7 +77,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return new Date().before(this.licenseTime);
     }
 
     @Override
@@ -83,6 +92,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.status;
     }
 }

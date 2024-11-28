@@ -26,6 +26,9 @@
       <if test="status != null">
         `status`,
       </if>
+      <if test="role != null">
+        role,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="uid != null">
@@ -49,6 +52,9 @@
       <if test="status != null">
         #{status,jdbcType=BOOLEAN},
       </if>
+      <if test="role != null">
+        #{role,jdbcType=BOOLEAN},
+      </if>
     </trim>
   </insert>
     <select id="selectByUsername" resultType="com.eTag.back.api.pojo.User">
@@ -56,4 +62,13 @@
         from user
         where username = #{username}
     </select>
+  <select id="searchUserPageHelper" resultType="com.eTag.back.api.pojo.User">
+    select *
+    from user
+    <where>
+      <if test="name != null and name != '' ">
+        and username like '%${name}%'
+      </if>
+    </where>
+  </select>
 </mapper>

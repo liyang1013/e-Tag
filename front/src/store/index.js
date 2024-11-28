@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from "@/router";
-import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex)
 
@@ -9,23 +8,15 @@ export default new Vuex.Store({
     state: {
         isSidebarNavCollapse: false,
         currentMenu: 'home',
-        activeMenuList: [],
-        token: null
+        activeMenuList: []
     },
-    getters: {
-        getToken(state){
-           return state.token
-        }
-    },
+    getters: {},
     mutations: {
         toggleNavCollapse(state) {
             state.isSidebarNavCollapse = !state.isSidebarNavCollapse
         },
         SET_CURRENT_MENU(state, currentMenu) {
             state.currentMenu = currentMenu
-        },
-        setToken(state, newToken){
-            state.token = newToken
         },
         addMenu(state, menu) {
             let index = state.activeMenuList.findIndex(item => {
@@ -48,13 +39,6 @@ export default new Vuex.Store({
         },
        
     },
-    plugins: [createPersistedState({
-           
-        storage: window.localStorage, 
-        key: 'vuex', 
-        include: ['token'], 
-        exclude: ['isSidebarNavCollapse','currentMenu','activeMenuList'] 
-      })],
     actions: {},
     modules: {}
 })

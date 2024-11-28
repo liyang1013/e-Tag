@@ -9,6 +9,7 @@ import com.eTag.back.entity.SearchVo;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,48 +24,41 @@ public class DeviceController {
 
     @PostMapping("/searchDevicePageHelper")
     public BaseResult searchDevicePageHelper(@RequestBody SearchVo searchVo) {
-
         PageHelper.startPage(searchVo.getCurrentPage(), searchVo.getSize());
         Page<Devices> page = iDevicesService.searchDevicePageHelper(searchVo);
         return BaseResult.success(page, page.getTotal());
     }
 
     @PostMapping("/getTemplate")
-    public BaseResult getTemplate(@RequestBody Devices devices){
+    public BaseResult getTemplate(@RequestBody Devices devices) {
         return BaseResult.success(iDevicesService.getTemplate(devices));
     }
 
     @PostMapping("/uploadFile")
     public BaseResult uploadFile(MultipartFile file) throws IOException {
-       return BaseResult.success(iDevicesService.uploadFile(file));
+        return BaseResult.success(iDevicesService.uploadFile(file));
     }
 
     @PostMapping("/enable")
-    public BaseResult enable(@RequestBody Devices devices){
+    public BaseResult enable(@RequestBody Devices devices) {
         iDevicesService.enable(devices);
         return BaseResult.success(devices.getStatus() ? "开启标签" : "关闭标签");
     }
 
     @PostMapping("/addLabel")
-    public BaseResult addLabel(@RequestBody Devices devices)  {
+    public BaseResult addLabel(@RequestBody Devices devices) {
         iDevicesService.addLabel(devices);
         return BaseResult.success();
     }
 
     @PostMapping("/deleteDevice")
-    public BaseResult deleteDevice(@RequestBody Devices devices){
+    public BaseResult deleteDevice(@RequestBody Devices devices) {
         iDevicesService.deleteDevice(devices);
         return BaseResult.success();
     }
 
     @GetMapping("/getLabel")
-    public LabelResult getLabel(String clientid){
-
-        LabelResult result = new LabelResult();
-        result.setState("Done");
-        result.setMessage("获取成功");
-        result.setNumber("");
-        result.setData(iDevicesService.getLabel(clientid));
-        return result;
+    public LabelResult getLabel(String clientid) {
+        return LabelResult.builder().State("Done").Message("获取成功").Number("").Data(iDevicesService.getLabel(clientid)).build();
     }
 }

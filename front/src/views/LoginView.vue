@@ -35,7 +35,8 @@ export default {
 
             this.$http.post('/api/auth/login', this.user).then(res => {
                 if (res.data.status === 200) {
-                    this.$store.commit('setToken', res.data.message)
+                    localStorage.setItem('token',res.data.message)
+                    localStorage.setItem('exp',res.data.result)
                     this.$router.push({ name: 'eTag' });
                 }
             })

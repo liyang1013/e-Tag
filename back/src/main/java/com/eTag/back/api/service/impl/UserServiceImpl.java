@@ -2,7 +2,8 @@ package com.eTag.back.api.service.impl;
 
 import com.eTag.back.api.mapper.UserMapper;
 import com.eTag.back.api.pojo.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.eTag.back.entity.SearchVo;
+import com.github.pagehelper.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,10 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userMapper.selectByUsername(username);
-        if(user == null) throw new UsernameNotFoundException("用户名密码错误");
-        return user;
+        return userMapper.selectByUsername(username);
+    }
+
+    public Page<User> searchUserPageHelper(SearchVo searchVo) {
+        return userMapper.searchUserPageHelper(searchVo);
     }
 }
