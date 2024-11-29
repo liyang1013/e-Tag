@@ -1,7 +1,7 @@
 package com.eTag.back.api.controller;
 
-import cn.hutool.jwt.JWT;
 import com.eTag.back.api.pojo.Devices;
+import com.eTag.back.api.pojo.LabelRequestBody;
 import com.eTag.back.api.service.IDevicesService;
 import com.eTag.back.entity.BaseResult;
 import com.eTag.back.entity.LabelResult;
@@ -9,11 +9,9 @@ import com.eTag.back.entity.SearchVo;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
@@ -58,7 +56,7 @@ public class DeviceController {
     }
 
     @GetMapping("/getLabel")
-    public LabelResult getLabel(String clientid) {
-        return LabelResult.builder().State("Done").Message("获取成功").Number("").Data(iDevicesService.getLabel(clientid)).build();
+    public LabelResult getLabel(LabelRequestBody body) {
+        return LabelResult.builder().State("Done").Message("获取成功").Number("").Data(iDevicesService.getLabel(body)).build();
     }
 }

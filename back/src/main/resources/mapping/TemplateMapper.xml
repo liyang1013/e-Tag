@@ -3,98 +3,110 @@
 <mapper namespace="com.eTag.back.api.mapper.TemplateMapper">
 
 
-  <insert id="insertSelective" parameterType="com.eTag.back.api.pojo.Template">
-    insert into template
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="uuid != null">
-        uuid,
-      </if>
-      <if test="x != null">
-        x,
-      </if>
-      <if test="y != null">
-        y,
-      </if>
-      <if test="width != null">
-        width,
-      </if>
-      <if test="height != null">
-        height,
-      </if>
-      <if test="name != null">
-        `name`,
-      </if>
-      <if test="md5 != null">
-        md5,
-      </if>
-      <if test="type != null">
-        `type`,
-      </if>
-      <if test="clientId != null">
-        client_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="uuid != null">
-        #{uuid,jdbcType=VARCHAR},
-      </if>
-      <if test="x != null">
-        #{x,jdbcType=INTEGER},
-      </if>
-      <if test="y != null">
-        #{y,jdbcType=INTEGER},
-      </if>
-      <if test="width != null">
-        #{width,jdbcType=INTEGER},
-      </if>
-      <if test="height != null">
-        #{height,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="md5 != null">
-        #{md5,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="clientId != null">
-        #{clientId,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateSelective">
-    UPDATE template
-    <set>
-      <if test="x != null">
-        x = #{x,jdbcType=INTEGER},
-      </if>
-      <if test="y != null">
-        y = #{y,jdbcType=INTEGER},
-      </if>
-      <if test="width != null">
-        width = #{width,jdbcType=INTEGER},
-      </if>
-      <if test="height != null">
-        height = #{height,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="md5 != null">
-        md5 = #{md5,jdbcType=VARCHAR},
-      </if>
-    </set>
-    WHERE client_id = #{clientId,jdbcType=VARCHAR}
-    AND `type` = #{type,jdbcType=VARCHAR}
-  </update>
-  <delete id="deleteByClientId">
-    delete from template where client_id = #{clientId}
-  </delete>
-  <select id="getTemplateByClientId" resultType="com.eTag.back.api.pojo.Template">
-    select *
-    from template
-    where client_id = #{clientId}
-  </select>
+    <insert id="insertSelective" parameterType="com.eTag.back.api.pojo.Template">
+        insert into template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="x != null">
+                x,
+            </if>
+            <if test="y != null">
+                y,
+            </if>
+            <if test="width != null">
+                width,
+            </if>
+            <if test="height != null">
+                height,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="md5 != null">
+                md5,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="clientId != null">
+                client_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="x != null">
+                #{x,jdbcType=INTEGER},
+            </if>
+            <if test="y != null">
+                #{y,jdbcType=INTEGER},
+            </if>
+            <if test="width != null">
+                #{width,jdbcType=INTEGER},
+            </if>
+            <if test="height != null">
+                #{height,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="md5 != null">
+                #{md5,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="clientId != null">
+                #{clientId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateSelective">
+        UPDATE template
+        <set>
+            <if test="x != null">
+                x = #{x,jdbcType=INTEGER},
+            </if>
+            <if test="y != null">
+                y = #{y,jdbcType=INTEGER},
+            </if>
+            <if test="width != null">
+                width = #{width,jdbcType=INTEGER},
+            </if>
+            <if test="height != null">
+                height = #{height,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="md5 != null">
+                md5 = #{md5,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE client_id = #{clientId,jdbcType=VARCHAR}
+        AND `type` = #{type,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteByClientId">
+        delete
+        from template
+        where client_id = #{clientId}
+    </delete>
+    <select id="getTemplateByClientId" resultType="com.eTag.back.api.pojo.Template">
+        select t.*
+        from template t
+        left join devices d on d.client_id = t.client_id
+        left join user u on u.uid = d.create_user
+        <where>
+            d.client_id = #{clientId} and u.license_time > now()
+            <if test="appid != null and appid != ''">
+                and u.appid = #{appid}
+            </if>
+            <if test="status != null">
+                and d.status = #{status}
+            </if>
+        </where>
+    </select>
 </mapper>

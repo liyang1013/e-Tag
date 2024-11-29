@@ -19,4 +19,7 @@ public interface DevicesMapper {
 
     void deleteByClientId(String clientId);
 
+    void deleteByUid(Integer uid);
+
+    void updateDeviceLastTime(String clientId);
 }

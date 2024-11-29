@@ -11,9 +11,15 @@ public interface UserMapper {
 
     int insertSelective(User record);
 
+    void updateSelective(User user);
+
     User selectByUsername(@Param("username") String username);
 
     Page<User> searchUserPageHelper(SearchVo searchVo);
 
     void writeLoginInfo(User user);
+
+    void deleteByUid(Integer uid);
+
+    String selectAppSecretByAppid(String clientid);
 }

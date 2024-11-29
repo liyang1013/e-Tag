@@ -56,8 +56,7 @@ export default {
         this.$nextTick(() => {
             this.$refs.un.focus();
             this.getIpInfo()
-        });
-       
+        }); 
     }
 }
 </script>

@@ -23,4 +23,6 @@ public class SearchVo {
 
     private Integer total;
 
+    private Integer uid;
+
 }

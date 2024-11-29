@@ -36,7 +36,8 @@
 
             <el-table-column prop="status" label="是否启用">
                 <template slot-scope="scope">
-                    <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" @change="isEnable(scope.row)">
+                    <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949"
+                        @change="isEnable(scope.row)">
                     </el-switch>
                 </template>
             </el-table-column>
@@ -97,7 +98,7 @@
                         <el-form-item label="图片上传">
                             <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false"
                                 :show-file-list="false" accept="image/*"
-                                :on-success="(res) => upload_success(res, 'image')" :on-error="upload_err">
+                                :on-success="(res) => upload_success(res, 'image')">
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
@@ -132,7 +133,7 @@
                         <video :src="'/api/uploads/' + forms.video.name" :style="videoStyle" autoplay loop
                             muted></video>
                         <!-- <img :src="'/api/uploads/' + forms.image.name" :style="imageStyle" /> -->
-                         <div :style="imageStyle"></div>
+                        <div :style="imageStyle"></div>
                     </el-card>
                 </el-col>
             </el-row>
@@ -211,7 +212,7 @@ export default {
                 top: `${this.forms.video.y}px`,
                 width: `${this.forms.video.width}px`,
                 height: `${this.forms.video.height}px`
-                
+
             };
         },
         imageStyle() {
@@ -240,10 +241,12 @@ export default {
         newLabel() {
             this.drawer = true;
             this.abledClientid = false
-            this.$refs.forms.resetFields()
+            this.$nextTick(() => {
+                this.$refs.forms.resetFields()
+            })
         },
-        isEnable(row){
-            this.$http.post('/api/device/enable',row)
+        isEnable(row) {
+            this.$http.post('/api/device/enable', row)
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
@@ -264,7 +267,7 @@ export default {
         resetForm(formName) {
             if (this.abledClientid) {
                 this.forms = JSON.parse(JSON.stringify(this.editTemp));
-            } else this.$refs[formName].resetFields()
+            } else { this.$nextTick(() => { this.$refs[formName].resetFields() }) }
         },
         confirmDelete(row) {
             this.$confirm('此操作将永久删除该电子标签, 是否继续?', '提示', {
@@ -304,13 +307,14 @@ export default {
             })
         },
         upload_success(data, type) {
-            if (type === 'image')
-                this.forms.image.name = data.message
-            else if (type === 'video')
-                this.forms.video.name = data.message
-        },
-        upload_err(data) {
-            this.$message.warning(data.message)
+            if (data.status === 200) {
+                if (type === 'image')
+                    this.forms.image.name = data.message
+                else if (type === 'video')
+                    this.forms.video.name = data.message
+            } else
+                this.$message({ type: 'error', message: data.message });
+
         },
         handleCurrentChange(val) {
             this.search(val);

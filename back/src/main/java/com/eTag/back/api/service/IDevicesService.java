@@ -1,6 +1,7 @@
 package com.eTag.back.api.service;
 
 import com.eTag.back.api.pojo.Devices;
+import com.eTag.back.api.pojo.LabelRequestBody;
 import com.eTag.back.api.pojo.Template;
 import com.eTag.back.entity.SearchVo;
 import com.github.pagehelper.Page;
@@ -22,5 +23,5 @@ public interface IDevicesService {
 
     void enable(Devices devices);
 
-    String getLabel(String clientid);
+    String getLabel(LabelRequestBody body);
 }

@@ -18,6 +18,7 @@
         </el-tag>
       </div>
     </div>
+    <el-button type="danger" round size="mini" style=" margin-left: auto; " @click="logout()">退出</el-button>
   </aside>
 </template>
 <script>
@@ -51,6 +52,11 @@ export default {
       let style;
       this.currentMenu === path ? style = 'dark' : style = 'plain'
       return style
+    },
+    logout() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('exp')
+      this.$router.push({ name: 'login' });
     }
   },
   mounted() {
@@ -72,6 +78,10 @@ export default {
   background: #fff;
   z-index: 1000;
   transition: left 0.25s;
+  display: flex; // 添加这一行来启用 flexbox
+  align-items: center; // 垂直居中子元素
+  justify-content: space-between; // 让子元素在主轴上分布，首尾对齐
+  padding: 0 10px; // 可选，为内部元素提供一些内边距
 
   .el-tag {
     margin-left: 10px;

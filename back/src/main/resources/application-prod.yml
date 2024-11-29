@@ -1,6 +1,6 @@
 #Tomcat
 server:
-  port: 18888
+  port: 8080
 # DataSource
 spring:
   datasource:
@@ -12,7 +12,7 @@ spring:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://localhost:3306/etag?characterEncoding=UTF-8&serverTimezone=UTC
           username: root
-          password: 961013ly
+          password: root
 
   servlet:
     multipart:
@@ -37,4 +37,5 @@ logging:
 
 file:
   upload-dir: /vol1/1000/eTag/file/
-  api-path: http://liyang.chat:18888/uploads/
+  api-path: http://47.93.170.149:8080/uploads/
+  api: http://47.93.170.149:8080/device/getLabel

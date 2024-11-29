@@ -5,6 +5,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONUtil;
 import com.eTag.back.api.mapper.DevicesMapper;
 import com.eTag.back.api.mapper.TemplateMapper;
+import com.eTag.back.api.mapper.UserMapper;
 import com.eTag.back.api.pojo.*;
 import com.eTag.back.api.service.IDevicesService;
 import com.eTag.back.entity.SearchVo;
@@ -17,12 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,9 +43,13 @@ public class DevicesServiceImpl implements IDevicesService {
     @Resource
     private TemplateMapper templateMapper;
 
+    @Resource
+    private UserMapper userMapper;
+
     @Override
     public Page<Devices> searchDevicePageHelper(SearchVo searchVo) {
         User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(! "admin".equals(u.getRole())) searchVo.setUid(u.getUid());
         return devicesMapper.searchDevicePageHelper(searchVo);
     }
 
@@ -48,8 +57,39 @@ public class DevicesServiceImpl implements IDevicesService {
     public String uploadFile(MultipartFile file) throws IOException {
 
         if (file.isEmpty()) throw new RuntimeException("文件不能为空");
-        //todo 根据MD5检查重复文件
+
+        long maxSizeForImages = 2 * 1024 * 1024; // 2MB
+        long maxSizeForVideos = 25 * 1024 * 1024; // 25MB
+        long fileSize = file.getSize();
         String fileName = file.getOriginalFilename();
+        String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+
+        if (Arrays.asList("jpg", "jpeg", "png", "gif").contains(fileExtension)) {
+            if (fileSize > maxSizeForImages) {
+                throw new RuntimeException("图片文件不能超过2MB");
+            }
+
+            // 检查图片分辨率
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
+            int width = image.getWidth();
+            int height = image.getHeight();
+
+            boolean isValidResolution = (width == 800 && (height == 640 || height == 1280)) ||
+                    (height == 800 && (width == 640 || width == 1280));
+
+            if (!isValidResolution) {
+                throw new RuntimeException("图片分辨率必须是800x640, 800x1280, 或相应的宽高比");
+            }
+        } else if (Arrays.asList("mp4", "avi", "mov", "mkv").contains(fileExtension)) {
+            if (fileSize > maxSizeForVideos) {
+                throw new RuntimeException("视频文件不能超过25MB");
+            }
+        } else {
+            throw new RuntimeException("不支持的文件类型");
+        }
+
+
+        //todo 根据MD5检查重复文件
         Path filePath = Paths.get(uploadDir, fileName);
         Files.write(filePath, file.getBytes());
         return fileName;
@@ -58,10 +98,12 @@ public class DevicesServiceImpl implements IDevicesService {
     @Override
     @Transactional
     public void addLabel(Devices devices) {
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Devices isExist = devicesMapper.selectByClientId(devices.getClientId(), null);
         //新增
         if (isExist == null) {
-            Devices insert = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).status(true).createTime(new Date()).createUser("admin").build();
+            Devices insert = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).status(true).createTime(new Date()).createUser(u.getUid()).build();
             devicesMapper.insertSelective(insert);
 
             Template image = devices.getImage();
@@ -81,7 +123,7 @@ public class DevicesServiceImpl implements IDevicesService {
             //覆盖
         } else {
 
-            Devices update = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).updateTime(new Date()).updateUser("admin").build();
+            Devices update = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).updateTime(new Date()).updateUser(u.getUid()).build();
             devicesMapper.updateSelective(update);
 
             Template image = devices.getImage();
@@ -108,7 +150,7 @@ public class DevicesServiceImpl implements IDevicesService {
 
     @Override
     public List<Template> getTemplate(Devices devices) {
-        return templateMapper.getTemplateByClientId(devices.getClientId());
+        return templateMapper.getTemplateByClientId(null,devices.getClientId(),null);
     }
 
     @Override
@@ -118,16 +160,21 @@ public class DevicesServiceImpl implements IDevicesService {
     }
 
     @Override
-    public String getLabel(String clientid) {
+    public String getLabel(LabelRequestBody body) {
 
-        Devices devices = devicesMapper.selectByClientId(clientid, true);
+        String appSecret = userMapper.selectAppSecretByAppid(body.getAppid());
+        if( !DigestUtil.md5Hex( body.getStringSignTemp() + appSecret).toUpperCase().equals(body.getSign()))
+            throw new ELabelException("获取失败, 签名验证失败");
+
+        Devices devices = devicesMapper.selectByClientId(body.getClientid(), true);
         if(devices == null) throw new ELabelException("设备clientid错误或者不可用");
-        List<Template> templates = templateMapper.getTemplateByClientId(clientid);
+        List<Template> templates = templateMapper.getTemplateByClientId(body.getAppid(), body.getClientid(),true);
+        if(templates.size() == 0) throw new ELabelException("设备模板数据获取失败");
 
         Label label = new Label();
-        label.setId(clientid);
-        label.setItemCode(clientid);
-        label.setItemName(clientid);
+        label.setId(body.getClientid());
+        label.setItemCode(body.getClientid());
+        label.setItemName(body.getClientid());
         label.setNlast(devices.getNlast());
 
         for (Template template : templates) {
@@ -162,6 +209,7 @@ public class DevicesServiceImpl implements IDevicesService {
             }
         }
 
+        devicesMapper.updateDeviceLastTime(body.getClientid());
         return JSONUtil.toJsonStr(label);
 
     }

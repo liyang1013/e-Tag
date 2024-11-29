@@ -44,13 +44,13 @@
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateUser != null">
-                #{updateUser,jdbcType=VARCHAR},
+                #{updateUser},
             </if>
             <if test="status != null">
                 #{status,jdbcType=BOOLEAN},
             </if>
             <if test="createUser != null">
-                #{createUser,jdbcType=VARCHAR},
+                #{createUser},
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
@@ -70,13 +70,13 @@
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateUser != null">
-                update_user = #{updateUser,jdbcType=VARCHAR},
+                update_user = #{updateUser},
             </if>
             <if test="status != null">
                 `status` = #{status,jdbcType=BOOLEAN},
             </if>
             <if test="createUser != null">
-                create_user = #{createUser,jdbcType=VARCHAR},
+                create_user = #{createUser},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -85,13 +85,22 @@
         </set>
         where client_id = #{clientId,jdbcType=VARCHAR}
     </update>
+    <update id="updateDeviceLastTime">
+        update devices set last_time = now() where client_id = #{clientId,jdbcType=VARCHAR}
+    </update>
     <delete id="deleteByClientId">
         delete from devices where client_id = #{clientId}
+    </delete>
+    <delete id="deleteByUid">
+        delete from devices where update_user = #{uid}
     </delete>
     <select id="searchDevicePageHelper" resultType="com.eTag.back.api.pojo.Devices">
         select *
         from devices
         <where>
+            <if test="uid != null">
+                and create_user = #{uid}
+            </if>
             <if test="status != null">
                 and status = #{status}
             </if>

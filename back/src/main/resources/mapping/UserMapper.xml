@@ -11,11 +11,14 @@
       <if test="username != null">
         username,
       </if>
-      <if test="passwd != null">
-        passwd,
+      <if test="password != null">
+        password,
       </if>
       <if test="lastLoginTime != null">
         last_login_time,
+      </if>
+      <if test="licenseTime != null">
+        license_time,
       </if>
       <if test="ipAddress != null">
         ip_address,
@@ -29,6 +32,9 @@
       <if test="role != null">
         role,
       </if>
+      <if test="appSecret != null">
+        app_secret,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="uid != null">
@@ -37,11 +43,14 @@
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
       </if>
-      <if test="passwd != null">
-        #{passwd,jdbcType=VARCHAR},
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
       </if>
       <if test="lastLoginTime != null">
         #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="licenseTime != null">
+        #{licenseTime,jdbcType=TIMESTAMP},
       </if>
       <if test="ipAddress != null">
         #{ipAddress,jdbcType=VARCHAR},
@@ -55,25 +64,63 @@
       <if test="role != null">
         #{role,jdbcType=BOOLEAN},
       </if>
+      <if test="appSecret != null">
+        #{appSecret},
+      </if>
     </trim>
   </insert>
+  <update id="updateSelective" parameterType="com.eTag.back.api.pojo.User">
+    update user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseTime != null">
+        license_time = #{licenseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appid != null">
+        appid = #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=BOOLEAN},
+      </if>
+      <if test="appSecret != null">
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <where>
+      <if test="uid != null">
+        `uid` = #{uid,jdbcType=INTEGER}
+      </if>
+    </where>
+
+  </update>
   <update id="writeLoginInfo">
     update user
     set ip_address = #{ipAddress}, city = #{city}, last_login_time = now()
     where username = #{username}
   </update>
+  <delete id="deleteByUid">
+    delete from user where uid = #{uid}
+  </delete>
   <select id="selectByUsername" resultType="com.eTag.back.api.pojo.User">
       select *
         from user
         where username = #{username}
     </select>
   <select id="searchUserPageHelper" resultType="com.eTag.back.api.pojo.User">
-    select *
+    select uid,username, last_login_time,ip_address,appid,role,app_secret,status,license_time,city
     from user
     <where>
       <if test="name != null and name != '' ">
         and username like '%${name}%'
       </if>
     </where>
+  </select>
+  <select id="selectAppSecretByAppid" resultType="java.lang.String">
+    select app_secret from user where appid = #{appid}
   </select>
 </mapper>

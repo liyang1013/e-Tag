@@ -39,7 +39,7 @@ public class Devices implements Serializable {
     /**
      * 修改用户
      */
-    private String updateUser;
+    private Integer updateUser;
 
     /**
      * 状态
@@ -49,7 +49,7 @@ public class Devices implements Serializable {
     /**
      * 创建用户
      */
-    private String createUser;
+    private Integer createUser;
 
     /**
      * 创建时间
