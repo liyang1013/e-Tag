@@ -78,7 +78,7 @@ public class DevicesServiceImpl implements IDevicesService {
                     (height == 800 && (width == 640 || width == 1280));
 
             if (!isValidResolution) {
-                throw new RuntimeException("图片分辨率必须是800x640, 800x1280, 或相应的宽高比");
+                throw new RuntimeException("图片分辨率必须是800x640或者800x1280");
             }
         } else if (Arrays.asList("mp4", "avi", "mov", "mkv").contains(fileExtension)) {
             if (fileSize > maxSizeForVideos) {
@@ -88,11 +88,13 @@ public class DevicesServiceImpl implements IDevicesService {
             throw new RuntimeException("不支持的文件类型");
         }
 
+        // 生成唯一文件名
+        String uuid = UUID.randomUUID().toString();
+        String newFileName = uuid + "." + fileExtension;
 
-        //todo 根据MD5检查重复文件
-        Path filePath = Paths.get(uploadDir, fileName);
+        Path filePath = Paths.get(uploadDir, newFileName);
         Files.write(filePath, file.getBytes());
-        return fileName;
+        return newFileName;
     }
 
     @Override

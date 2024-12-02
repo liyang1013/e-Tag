@@ -71,8 +71,8 @@
 
                         <el-form-item label="视频上传">
                             <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false"
-                                :show-file-list="false" accept="video/*"
-                                :on-success="(res) => upload_success(res, 'video')" :on-error="upload_err">
+                                :show-file-list="false" accept="video/*" :headers="header"
+                                :on-success="(res) => upload_success(res, 'video')">
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
                         </el-form-item>
@@ -97,7 +97,7 @@
                         </el-form-item>
                         <el-form-item label="图片上传">
                             <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false"
-                                :show-file-list="false" accept="image/*"
+                                :show-file-list="false" accept="image/*" :headers="header"
                                 :on-success="(res) => upload_success(res, 'image')">
                                 <el-button type="primary">选择文件</el-button>
                             </el-upload>
@@ -146,6 +146,9 @@
 export default {
     data() {
         return {
+            header: {
+                token: localStorage.getItem('token')
+            },
             searchVo: {
                 code: null,
                 name: null,

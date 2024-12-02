@@ -6,7 +6,6 @@ import com.eTag.back.entity.LabelResult;
 import com.eTag.back.exception.ELabelException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -52,7 +51,7 @@ public class ParamExceptionConfig {
 
     @ExceptionHandler(RuntimeException.class)
     public BaseResult handleRuntimeException(RuntimeException exception) {
-        return BaseResult.fail("运行异常:"+exception.getMessage());
+        return BaseResult.fail(exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
