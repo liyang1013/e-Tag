@@ -49,6 +49,10 @@ public class UserServiceImpl implements UserDetailsService {
         user.setLicenseTime(DateUtils.add(user.getLicenseTime(), Calendar.HOUR,8));
 
         if (user.getUid() == null) {
+
+            User isExist = userMapper.selectByUsername(user.getUsername());
+            if(isExist != null) throw new RuntimeException("用户名已存在不能重复");
+
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userMapper.insertSelective(user);
         } else {
