@@ -5,6 +5,7 @@ import com.eTag.back.entity.BaseResult;
 import com.eTag.back.entity.LabelResult;
 import com.eTag.back.exception.ELabelException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +35,19 @@ public class ParamExceptionConfig {
      */
     @ExceptionHandler( AuthenticationException.class )
     public BaseResult handleAuthenticationException(AuthenticationException exception) {
-        return BaseResult.fail("用户名密码验证错误");
+        String message = exception.getMessage();
+        if (exception instanceof LockedException) {
+            message = "账户被锁定，请联系管理员!";
+        } else if (exception instanceof CredentialsExpiredException) {
+            message = "账户失效，请联系管理员!";
+        } else if (exception instanceof AccountExpiredException) {
+            message =  "账户过期，请联系管理员!";
+        } else if (exception instanceof DisabledException) {
+            message =  "账户被禁用，请联系管理员!";
+        } else if (exception instanceof BadCredentialsException) {
+            message = "用户名或者密码输入错误";
+        }
+        return BaseResult.fail("登入失败:" + message);
     }
 
 

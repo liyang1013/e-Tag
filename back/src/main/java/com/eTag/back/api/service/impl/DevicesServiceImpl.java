@@ -23,9 +23,13 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -54,7 +58,7 @@ public class DevicesServiceImpl implements IDevicesService {
     }
 
     @Override
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException, NoSuchAlgorithmException {
 
         if (file.isEmpty()) throw new RuntimeException("文件不能为空");
 
@@ -88,11 +92,37 @@ public class DevicesServiceImpl implements IDevicesService {
             throw new RuntimeException("不支持的文件类型");
         }
 
+        // 计算文件的MD5值
+        String md5 = getFileMD5(file.getInputStream());
+
+        // 构建存储路径
+        Path uploadDirPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadDirPath)) {
+            Files.createDirectories(uploadDirPath);
+        }
+
+        // 查找是否存在相同MD5值的文件
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(uploadDirPath, "*.*")) {
+            for (Path entry : stream) {
+                String existingFileName = entry.getFileName().toString();
+                String existingExtension = existingFileName.substring(existingFileName.lastIndexOf(".") + 1).toLowerCase();
+                if (existingExtension.equals(fileExtension)) {
+                    String existingMD5 = getFileMD5(Files.newInputStream(entry));
+                    if (md5.equals(existingMD5)) {
+                        // MD5值相同，直接返回文件名
+                        return existingFileName;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // 生成唯一文件名
         String uuid = UUID.randomUUID().toString();
         String newFileName = uuid + "." + fileExtension;
 
-        Path filePath = Paths.get(uploadDir, newFileName);
+        Path filePath = Paths.get(uploadDirPath.toString(), newFileName);
         Files.write(filePath, file.getBytes());
         return newFileName;
     }
@@ -214,5 +244,20 @@ public class DevicesServiceImpl implements IDevicesService {
         devicesMapper.updateDeviceLastTime(body.getClientid());
         return JSONUtil.toJsonStr(label);
 
+    }
+
+    private String getFileMD5(InputStream inputStream) throws IOException, NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            md.update(buffer, 0, bytesRead);
+        }
+        byte[] digest = md.digest();
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 }

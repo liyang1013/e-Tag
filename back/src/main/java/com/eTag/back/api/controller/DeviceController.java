@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/device")
@@ -33,7 +34,7 @@ public class DeviceController {
     }
 
     @PostMapping("/uploadFile")
-    public BaseResult uploadFile(MultipartFile file) throws IOException {
+    public BaseResult uploadFile(MultipartFile file) throws IOException, NoSuchAlgorithmException {
         return BaseResult.success(iDevicesService.uploadFile(file));
     }
 

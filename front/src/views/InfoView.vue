@@ -2,7 +2,7 @@
     <el-card class="box-card">
         <div slot="header" class="clearfix">
             <span>标签系统信息</span>
-            <el-button style="float: right; padding: 3px 0" type="text" @click="getSystemInfo()">刷新</el-button>
+            <el-button size="medium" style="float: right; padding: 3px 0" type="text" @click="getSystemInfo()" icon="el-icon-refresh"></el-button>
         </div>
         <div class="info">
             <p>接口地址: {{  info.password }}</p>

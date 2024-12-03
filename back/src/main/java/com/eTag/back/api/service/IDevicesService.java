@@ -8,12 +8,13 @@ import com.github.pagehelper.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface IDevicesService {
     Page<Devices> searchDevicePageHelper(SearchVo searchVo);
 
-    String uploadFile(MultipartFile file) throws IOException;
+    String uploadFile(MultipartFile file) throws IOException, NoSuchAlgorithmException;
 
     void addLabel(Devices devices);
 
