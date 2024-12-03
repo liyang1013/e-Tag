@@ -10,7 +10,6 @@ create table template
     name      varchar(100)         null,
     md5       varchar(32)          null,
     type      varchar(10)          null,
-    client_id varchar(15)          null,
-    isShow    tinyint(1) default 1 null comment '是否作为公用模板'
+    client_id varchar(15)          null
 );
 
