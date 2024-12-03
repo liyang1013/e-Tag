@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import com.eTag.back.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -82,7 +83,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return new Date().before(this.licenseTime);
+        return new Date().before(DateUtils.add(this.licenseTime,Calendar.DATE,1));
     }
 
     @Override
