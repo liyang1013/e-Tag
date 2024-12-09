@@ -46,10 +46,9 @@
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="user.username" placeholder="用户名" style="width: 240px;"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="password">
+                <el-form-item label="密码" prop="password" v-if="isEdit">
                     <el-input v-model="user.password" placeholder="密码" show-password style="width: 240px;"></el-input>
                 </el-form-item>
-
                 <el-form-item label="授权期" prop="licenseTime">
                     <el-date-picker v-model="user.licenseTime" type="date" placeholder="选择日期"  format="yyyy年MM月dd日" value-format="yyyy-MM-dd">
                     </el-date-picker>
@@ -127,7 +126,8 @@ export default {
             },
             tableLoading: false,
             submitLoading: false,
-            drawer: false
+            drawer: false,
+            isEdit: true
         }
     },
     methods: {
@@ -142,6 +142,7 @@ export default {
         },
         newUser() {
             this.drawer = true;
+            this.isEdit = true
             this.user = {
                 uid: null,
                 username: null,
@@ -154,6 +155,7 @@ export default {
         },
         editUser(row) {
             this.drawer = true;
+            this.isEdit = false
             this.user = {
                 uid: row.uid,
                 username: row.username,

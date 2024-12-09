@@ -38,6 +38,7 @@ export default {
                 if (res.data.status === 200) {
                     localStorage.setItem('token',res.data.message)
                     localStorage.setItem('exp',res.data.result)
+                    localStorage.setItem('username',this.user.username )
                     this.$router.push({ name: 'eTag' });
                 }
             })
