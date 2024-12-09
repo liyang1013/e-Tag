@@ -123,4 +123,14 @@
   <select id="selectAppSecretByAppid" resultType="java.lang.String">
     select app_secret from user where appid = #{appid}
   </select>
+  <select id="selectAppidWithoutUser" resultType="com.eTag.back.api.pojo.User">
+    select *
+    from user
+    <where>
+      appid = #{appid}
+      <if test="uid != null and uid != ''">
+        and  uid != #{uid}
+      </if>
+    </where>
+  </select>
 </mapper>

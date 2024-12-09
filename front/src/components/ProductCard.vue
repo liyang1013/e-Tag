@@ -97,6 +97,9 @@ export default {
   height: 100%;
   object-fit: cover;
 }
+/deep/ .el-card__body{
+  padding: 5px 5px 5px 20px;
+}
 
 .image-container img {
   width: 100%;

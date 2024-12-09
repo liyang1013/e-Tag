@@ -22,4 +22,6 @@ public interface UserMapper {
     void deleteByUid(Integer uid);
 
     String selectAppSecretByAppid(String clientid);
+
+    User selectAppidWithoutUser(User user);
 }

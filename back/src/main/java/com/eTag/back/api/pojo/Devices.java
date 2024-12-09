@@ -3,6 +3,7 @@ package com.eTag.back.api.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,7 @@ public class Devices implements Serializable {
     /**
      * 最近一次标签获取时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastTime;
 
     /**
@@ -63,4 +65,6 @@ public class Devices implements Serializable {
     private Template video;
 
     private Integer nlast;
+
+    private String username;
 }

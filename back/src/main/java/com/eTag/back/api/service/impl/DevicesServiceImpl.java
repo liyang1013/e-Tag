@@ -53,7 +53,7 @@ public class DevicesServiceImpl implements IDevicesService {
     @Override
     public Page<Devices> searchDevicePageHelper(SearchVo searchVo) {
         User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(! "admin".equals(u.getRole())) searchVo.setUid(u.getUid());
+        if (!"admin".equals(u.getRole())) searchVo.setUid(u.getUid());
         return devicesMapper.searchDevicePageHelper(searchVo);
     }
 
@@ -182,7 +182,7 @@ public class DevicesServiceImpl implements IDevicesService {
 
     @Override
     public List<Template> getTemplate(Devices devices) {
-        return templateMapper.getTemplateByClientId(null,devices.getClientId(),null);
+        return templateMapper.getTemplateByClientId(null, devices.getClientId(), null);
     }
 
     @Override
@@ -195,13 +195,13 @@ public class DevicesServiceImpl implements IDevicesService {
     public String getLabel(LabelRequestBody body) {
 
         String appSecret = userMapper.selectAppSecretByAppid(body.getAppid());
-        if( !DigestUtil.md5Hex( body.getStringSignTemp() + appSecret).toUpperCase().equals(body.getSign()))
+        if (!DigestUtil.md5Hex(body.getStringSignTemp() + appSecret).toUpperCase().equals(body.getSign()))
             throw new ELabelException("获取失败, 签名验证失败");
 
         Devices devices = devicesMapper.selectByClientId(body.getClientid(), true);
-        if(devices == null) throw new ELabelException("设备clientid错误或者不可用");
-        List<Template> templates = templateMapper.getTemplateByClientId(body.getAppid(), body.getClientid(),true);
-        if(templates.size() == 0) throw new ELabelException("设备模板数据获取失败");
+        if (devices == null) throw new ELabelException("设备clientId错误或者不可用");
+        List<Template> templates = templateMapper.getTemplateByClientId(body.getAppid(), body.getClientid(), true);
+        if (templates.size() == 0) throw new ELabelException("设备模板数据未维护");
 
         Label label = new Label();
         label.setId(body.getClientid());
@@ -210,12 +210,14 @@ public class DevicesServiceImpl implements IDevicesService {
         label.setNlast(devices.getNlast());
 
         for (Template template : templates) {
+            if (template.getHeight() * template.getWidth() <= 0) continue;
+
             if (template.getType().equals("image")) {
                 LabelPicture labelPicture = new LabelPicture();
                 labelPicture.setX(template.getX() * 2);
-                labelPicture.setY(template.getY()  * 2);
-                labelPicture.setHeight(template.getHeight()  * 2);
-                labelPicture.setWidth(template.getWidth()  * 2);
+                labelPicture.setY(template.getY() * 2);
+                labelPicture.setHeight(template.getHeight() * 2);
+                labelPicture.setWidth(template.getWidth() * 2);
                 labelPicture.setPictureName(template.getName());
                 labelPicture.setPictureMD5(template.getMd5());
                 labelPicture.setPictureUrl(apiPath + template.getName());
@@ -223,10 +225,10 @@ public class DevicesServiceImpl implements IDevicesService {
             } else if (template.getType().equals("video")) {
 
                 LabelVideo labelVideo = new LabelVideo();
-                labelVideo.setX(template.getX()  * 2);
-                labelVideo.setY(template.getY()  * 2);
-                labelVideo.setHeight(template.getHeight()  * 2);
-                labelVideo.setWidth(template.getWidth()  * 2);
+                labelVideo.setX(template.getX() * 2);
+                labelVideo.setY(template.getY() * 2);
+                labelVideo.setHeight(template.getHeight() * 2);
+                labelVideo.setWidth(template.getWidth() * 2);
 
                 Video video = new Video();
                 video.setVideoName(template.getName());

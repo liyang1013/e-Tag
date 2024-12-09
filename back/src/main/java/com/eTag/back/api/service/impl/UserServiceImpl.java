@@ -50,6 +50,9 @@ public class UserServiceImpl implements UserDetailsService {
 
         user.setLicenseTime(DateUtils.add(user.getLicenseTime(), Calendar.HOUR,8));
 
+        User u = userMapper.selectAppidWithoutUser(user);
+        if(u != null) throw new RuntimeException("appid已存在不可重复");
+
         if (user.getUid() == null) {
 
             User isExist = userMapper.selectByUsername(user.getUsername());

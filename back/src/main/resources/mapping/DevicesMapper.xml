@@ -95,20 +95,21 @@
         delete from devices where update_user = #{uid}
     </delete>
     <select id="searchDevicePageHelper" resultType="com.eTag.back.api.pojo.Devices">
-        select *
-        from devices
+        select d.*, u.username
+        from devices d
+        left join etag.user u on u.uid = d.create_user
         <where>
             <if test="uid != null">
-                and create_user = #{uid}
+                and d.create_user = #{uid}
             </if>
             <if test="status != null">
-                and status = #{status}
+                and d.status = #{status}
             </if>
             <if test="code != null and code != '' ">
-                and client_id like '%${code}%'
+                and d.client_id like '%${code}%'
             </if>
             <if test="name != null and name != '' ">
-                and name like '%${name}%'
+                and d.name like '%${name}%'
             </if>
         </where>
     </select>
