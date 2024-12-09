@@ -103,6 +103,11 @@
     set ip_address = #{ipAddress}, city = #{city}, last_login_time = now()
     where username = #{username}
   </update>
+  <update id="changePwd">
+    update user
+    set password = #{password}
+    where uid = #{uid}
+  </update>
   <delete id="deleteByUid">
     delete from user where uid = #{uid}
   </delete>

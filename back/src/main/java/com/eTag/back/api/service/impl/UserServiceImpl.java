@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
+import java.util.HashMap;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -61,11 +62,7 @@ public class UserServiceImpl implements UserDetailsService {
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userMapper.insertSelective(user);
         } else {
-            if (!"******".equals(user.getPassword())) {
-                user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            } else {
-                user.setPassword(null);
-            }
+            user.setPassword(null);
             userMapper.updateSelective(user);
         }
     }
@@ -81,5 +78,12 @@ public class UserServiceImpl implements UserDetailsService {
         User user = userMapper.selectByUsername(u.getUsername());
         user.setPassword(api);
         return user;
+    }
+
+    public void changePwd(HashMap<String, String> map) {
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!new BCryptPasswordEncoder().matches(map.get("oldPassword"), u.getPassword())) throw new RuntimeException("旧密码错误");
+        if(! map.get("newPassword").equals(map.get("confirmPassword"))) throw new RuntimeException("两次输入的新密码不一致");
+        userMapper.changePwd(u.getUid(),new BCryptPasswordEncoder().encode(map.get("newPassword")) );
     }
 }

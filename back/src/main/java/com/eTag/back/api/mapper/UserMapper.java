@@ -24,4 +24,6 @@ public interface UserMapper {
     String selectAppSecretByAppid(String clientid);
 
     User selectAppidWithoutUser(User user);
+
+    void changePwd(@Param("uid") Integer uid, @Param("password") String newPassword);
 }
