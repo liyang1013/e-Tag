@@ -33,6 +33,10 @@
             </el-table-column>
             <el-table-column prop="name" label="标签名">
             </el-table-column>
+            <el-table-column prop="username" label="归属人">
+            </el-table-column>
+            <el-table-column prop="lastTime" label="最近调用时间">
+            </el-table-column>
 
             <el-table-column prop="status" label="是否启用">
                 <template slot-scope="scope">
