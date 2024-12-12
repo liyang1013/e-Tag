@@ -27,8 +27,11 @@ public class UserServiceImpl implements UserDetailsService {
     @Resource
     DevicesMapper devicesMapper;
 
-    @Value("${file.api}")
-    private String api;
+    @Value("${file.getApi}")
+    private String getApi;
+
+    @Value("${file.postApi}")
+    private String postApi;
 
 
     @Override
@@ -51,14 +54,13 @@ public class UserServiceImpl implements UserDetailsService {
 
         user.setLicenseTime(DateUtils.add(user.getLicenseTime(), Calendar.HOUR,8));
 
-        User u = userMapper.selectAppidWithoutUser(user);
+        User u = userMapper.selectUsernameWithoutUser(user);
+        if(u != null) throw new RuntimeException("用户名已存在不可重复");
+
+        u = userMapper.selectAppidWithoutUser(user);
         if(u != null) throw new RuntimeException("appid已存在不可重复");
 
         if (user.getUid() == null) {
-
-            User isExist = userMapper.selectByUsername(user.getUsername());
-            if(isExist != null) throw new RuntimeException("用户名已存在不能重复");
-
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userMapper.insertSelective(user);
         } else {
@@ -76,7 +78,8 @@ public class UserServiceImpl implements UserDetailsService {
     public User getSystemInfo() {
         User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userMapper.selectByUsername(u.getUsername());
-        user.setPassword(api);
+        user.setPassword(getApi);
+        user.setNewPassword(postApi);
         return user;
     }
 

@@ -5,7 +5,8 @@
             <el-button size="medium" style="float: right; padding: 3px 0" type="text" @click="getSystemInfo()" icon="el-icon-refresh"></el-button>
         </div>
         <div class="info">
-            <p>接口地址: {{  info.password }}</p>
+            <p>GET接口地址: {{  info.password }}</p>
+            <p>POST接口地址: {{  info.newPassword }}</p>
             <p>appid: {{  info.appid }}</p>
             <p>appSecret: {{  info.appSecret }}</p>
             <p>系统授权到期日：{{ info.licenseTime }}</p>

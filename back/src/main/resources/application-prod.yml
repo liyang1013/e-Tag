@@ -38,4 +38,5 @@ logging:
 file:
   upload-dir: C:\Users\Administrator\Downloads/uploadPath/
   api-path: http://47.93.170.149:8080/uploads/
-  api: http://47.93.170.149:8080/device/getLabel
+  getApi: http://47.93.170.149:8080/device/getLabel
+  postApi: http://47.93.170.149:8080/device/postLabel

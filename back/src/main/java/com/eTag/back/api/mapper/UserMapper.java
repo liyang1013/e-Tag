@@ -26,4 +26,6 @@ public interface UserMapper {
     User selectAppidWithoutUser(User user);
 
     void changePwd(@Param("uid") Integer uid, @Param("password") String newPassword);
+
+    User selectUsernameWithoutUser(User user);
 }

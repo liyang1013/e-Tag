@@ -75,9 +75,6 @@
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
-      </if>
       <if test="licenseTime != null">
         license_time = #{licenseTime,jdbcType=TIMESTAMP},
       </if>
@@ -133,6 +130,16 @@
     from user
     <where>
       appid = #{appid}
+      <if test="uid != null and uid != ''">
+        and  uid != #{uid}
+      </if>
+    </where>
+  </select>
+  <select id="selectUsernameWithoutUser" resultType="com.eTag.back.api.pojo.User">
+    select *
+    from user
+    <where>
+      username = #{username}
       <if test="uid != null and uid != ''">
         and  uid != #{uid}
       </if>

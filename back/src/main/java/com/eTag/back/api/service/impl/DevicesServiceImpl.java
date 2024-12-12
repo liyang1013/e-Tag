@@ -30,10 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DevicesServiceImpl implements IDevicesService {
@@ -154,6 +151,8 @@ public class DevicesServiceImpl implements IDevicesService {
 
             //覆盖
         } else {
+
+            if(!Objects.equals(u.getUid(), isExist.getCreateUser())) throw new RuntimeException("当前标签:" + devices.getClientId()+"已被其他用户添加");
 
             Devices update = Devices.builder().clientId(devices.getClientId()).name(devices.getName()).updateTime(new Date()).updateUser(u.getUid()).build();
             devicesMapper.updateSelective(update);
