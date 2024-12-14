@@ -85,19 +85,19 @@
                         </el-form-item>
                         <el-form-item label="左边距(X)" prop="video.x">
                             <el-input-number v-model="forms.video.x" controls-position="right" :min="0"
-                                :max="400"></el-input-number>
+                                :max="800"></el-input-number>
                         </el-form-item>
                         <el-form-item label="上边距(Y)" prop="video.y">
                             <el-input-number v-model="forms.video.y" controls-position="right" :min="0"
-                                :max="640"></el-input-number>
+                                :max="1280"></el-input-number>
                         </el-form-item>
                         <el-form-item label="视频宽度" prop="video.width">
                             <el-input-number v-model="forms.video.width" controls-position="right" :min="0"
-                                :max="400"></el-input-number>
+                                :max="800"></el-input-number>
                         </el-form-item>
                         <el-form-item label="视频高度" prop="video.height">
                             <el-input-number v-model="forms.video.height" controls-position="right" :min="0"
-                                :max="640"></el-input-number>
+                                :max="1280"></el-input-number>
                         </el-form-item>
                         <el-form-item label="图片上传">
                             <el-upload class="upload-demo" action="/api/device/uploadFile" :multiple="false"
@@ -111,19 +111,19 @@
                         </el-form-item>
                         <el-form-item label="左边距(X)" prop="image.x">
                             <el-input-number v-model="forms.image.x" controls-position="right" :min="0"
-                                :max="400"></el-input-number>
+                                :max="800"></el-input-number>
                         </el-form-item>
                         <el-form-item label="上边距(Y)" prop="image.y">
                             <el-input-number v-model="forms.image.y" controls-position="right" :min="0"
-                                :max="640"></el-input-number>
+                                :max="1280"></el-input-number>
                         </el-form-item>
                         <el-form-item label="图片宽度" prop="image.width">
                             <el-input-number v-model="forms.image.width" controls-position="right" :min="0"
-                                :max="400"></el-input-number>
+                                :max="800"></el-input-number>
                         </el-form-item>
                         <el-form-item label="图片高度" prop="image.height">
                             <el-input-number v-model="forms.image.height" controls-position="right" :min="0"
-                                :max="640"></el-input-number>
+                                :max="1280"></el-input-number>
                         </el-form-item>
                         <el-form-item style="margin: 30px -50px">
                             <el-button type="danger" @click="submitForm('forms')"
@@ -183,17 +183,17 @@ export default {
                 image: {
                     name: '1001.jpg',
                     x: 0,
-                    y: 320,
-                    width: 400,
-                    height: 320,
+                    y: 640,
+                    width: 800,
+                    height: 640,
                     type: 'image'
                 },
                 video: {
                     name: '2001.mp4',
                     x: 0,
                     y: 0,
-                    width: 400,
-                    height: 320,
+                    width: 800,
+                    height: 640,
                     type: 'video'
                 }
             },
@@ -215,10 +215,10 @@ export default {
             return {
                 position: 'absolute',
                 objectFit: 'cover',
-                left: `${this.forms.video.x}px`,
-                top: `${this.forms.video.y}px`,
-                width: `${this.forms.video.width}px`,
-                height: `${this.forms.video.height}px`
+                left: `${this.forms.video.x /2}px`,
+                top: `${this.forms.video.y /2}px`,
+                width: `${this.forms.video.width/2}px`,
+                height: `${this.forms.video.height/2}px`
 
             };
         },
@@ -227,10 +227,10 @@ export default {
                 position: 'absolute',
                 backgroundSize: '100% auto',
                 backgroundRepeat: 'repeat-y',
-                left: `${this.forms.image.x}px`,
-                top: `${this.forms.image.y}px`,
-                width: `${this.forms.image.width}px`,
-                height: `${this.forms.image.height}px`,
+                left: `${this.forms.image.x/2}px`,
+                top: `${this.forms.image.y/2}px`,
+                width: `${this.forms.image.width/2}px`,
+                height: `${this.forms.image.height/2}px`,
                 backgroundImage: `url(/api/uploads/${this.forms.image.name})`
             };
         },

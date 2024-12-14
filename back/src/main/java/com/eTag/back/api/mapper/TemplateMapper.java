@@ -17,4 +17,6 @@ public interface TemplateMapper {
     void deleteByClientId(String clientId);
 
     List<Template> getTemplateByClientId(@Param("appid") String appid, @Param("clientId") String clientId,@Param("status") Boolean status);
+
+    List<Template> getFileList();
 }

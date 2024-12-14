@@ -213,10 +213,10 @@ public class DevicesServiceImpl implements IDevicesService {
 
             if (template.getType().equals("image")) {
                 LabelPicture labelPicture = new LabelPicture();
-                labelPicture.setX(template.getX() * 2);
-                labelPicture.setY(template.getY() * 2);
-                labelPicture.setHeight(template.getHeight() * 2);
-                labelPicture.setWidth(template.getWidth() * 2);
+                labelPicture.setX(template.getX());
+                labelPicture.setY(template.getY());
+                labelPicture.setHeight(template.getHeight());
+                labelPicture.setWidth(template.getWidth());
                 labelPicture.setPictureName(template.getName());
                 labelPicture.setPictureMD5(template.getMd5());
                 labelPicture.setPictureUrl(apiPath + template.getName());
@@ -224,10 +224,10 @@ public class DevicesServiceImpl implements IDevicesService {
             } else if (template.getType().equals("video")) {
 
                 LabelVideo labelVideo = new LabelVideo();
-                labelVideo.setX(template.getX() * 2);
-                labelVideo.setY(template.getY() * 2);
-                labelVideo.setHeight(template.getHeight() * 2);
-                labelVideo.setWidth(template.getWidth() * 2);
+                labelVideo.setX(template.getX());
+                labelVideo.setY(template.getY());
+                labelVideo.setHeight(template.getHeight());
+                labelVideo.setWidth(template.getWidth());
 
                 Video video = new Video();
                 video.setVideoName(template.getName());
@@ -245,6 +245,61 @@ public class DevicesServiceImpl implements IDevicesService {
         devicesMapper.updateDeviceLastTime(body.getClientid());
         return JSONUtil.toJsonStr(label);
 
+    }
+
+    @Override
+    public String postLabel(LabelRequestBody body) {
+        String appSecret = userMapper.selectAppSecretByAppid(body.getAppid());
+        if (!DigestUtil.md5Hex(body.getStringSign5X() + appSecret).toUpperCase().equals(body.getSign()))
+            throw new ELabelException("获取失败, 签名验证失败");
+
+        Devices devices = devicesMapper.selectByClientId(body.getClientid(), true);
+        if (devices == null) throw new ELabelException("设备clientId错误或者不可用");
+        List<Template> templates = templateMapper.getTemplateByClientId(body.getAppid(), body.getClientid(), true);
+        if (templates.size() == 0) throw new ELabelException("设备模板数据未维护");
+
+        Label label = new Label();
+        label.setId(body.getClientid());
+        label.setItemCode(body.getClientid());
+        label.setItemName(body.getClientid());
+        label.setNlast(devices.getNlast());
+
+        for (Template template : templates) {
+            if (template.getHeight() * template.getWidth() <= 0) continue;
+
+            if (template.getType().equals("image")) {
+                LabelPicture labelPicture = new LabelPicture();
+                labelPicture.setX(template.getX());
+                labelPicture.setY(template.getY());
+                labelPicture.setHeight(template.getHeight());
+                labelPicture.setWidth(template.getWidth());
+                labelPicture.setPictureName(template.getName());
+                labelPicture.setPictureMD5(template.getMd5());
+                labelPicture.setPictureUrl(apiPath + template.getName());
+                label.setLabelPicture(labelPicture);
+            } else if (template.getType().equals("video")) {
+
+                LabelVideo labelVideo = new LabelVideo();
+                labelVideo.setX(template.getX());
+                labelVideo.setY(template.getY());
+                labelVideo.setHeight(template.getHeight());
+                labelVideo.setWidth(template.getWidth());
+
+                Video video = new Video();
+                video.setVideoName(template.getName());
+                video.setVideoUrl(apiPath + template.getName());
+                video.setVideoNo(1);
+                video.setVideoMD5(template.getMd5());
+
+                labelVideo.setVideoList(new ArrayList<>());
+                labelVideo.getVideoList().add(video);
+
+                label.setLabelVideo(labelVideo);
+            }
+        }
+
+        devicesMapper.updateDeviceLastTime(body.getClientid());
+        return JSONUtil.toJsonStr(label);
     }
 
     private String getFileMD5(InputStream inputStream) throws IOException, NoSuchAlgorithmException {

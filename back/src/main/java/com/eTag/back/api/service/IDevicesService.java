@@ -25,4 +25,6 @@ public interface IDevicesService {
     void enable(Devices devices);
 
     String getLabel(LabelRequestBody body);
+
+    String postLabel(LabelRequestBody body);
 }
